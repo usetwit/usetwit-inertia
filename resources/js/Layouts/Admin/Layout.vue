@@ -44,18 +44,18 @@ if (page.props.flash?.error) {
         <div class="flex-1 pb-4 overflow-x-auto">
 
             <header
-                class="mx-2 mt-4 lg:mx-4 lg:mt-6 font-bold text-2xl text-slate-700 dark:text-white flex align-middle">
+                class="mx-2 mt-4 lg:mx-4 lg:mt-6 font-bold text-4xl text-slate-700 dark:text-white flex align-middle">
                 {{ heading }}
             </header>
 
             <nav v-if="breadcrumbs?.length">
-                <ol class="flex flex-wrap items-center mb-4 lg:mb-6 mt-1 mx-2 lg:mt-2 lg:mx-4 text-slate-500 dark:text-slate-200 breadcrumbs text-xs">
+                <ol class="flex flex-wrap items-center mb-4 lg:mb-6 mt-1 mx-2 lg:mt-2 lg:mx-4 text-slate-500 dark:text-slate-200 breadcrumbs text-sm">
                     <li v-for="(crumb, i) in breadcrumbs" :key="i">
                         <Link v-if="i < breadcrumbs.length - 1"
                               :href="crumb.url"
                               class="text-slate-500 hover:text-orange-500 dark:text-teal-500"
                         >
-                            {{ crumb.title }}
+                            <i v-if="i === 0" class="pi pi-home mr-1"></i>{{ crumb.title }}
                         </Link>
                         <span v-else>{{ crumb.title }}</span>
                     </li>

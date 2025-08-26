@@ -7,14 +7,8 @@ use App\Models\User;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
 
-// Testing
-Breadcrumbs::for('admin.home.test', function (BreadcrumbTrail $trail) {
-    $trail->push('Testing', route('admin.home'));
-});
-
 // Home
 Breadcrumbs::for('admin.home', function (BreadcrumbTrail $trail) {
-    $trail->parent('admin.home.test');
     $trail->push('Home', route('admin.home'));
 });
 
