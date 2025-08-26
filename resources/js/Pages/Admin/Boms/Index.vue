@@ -6,6 +6,8 @@ import Column from '@/components/DataTable/Column.vue';
 import useTable from '@/composables/useTable.js';
 import {formatDate, applyFilterRegex} from '@/helpers.js';
 import useStorage from '@/composables/useStorage.js';
+import {Link} from '@inertiajs/vue3';
+import RegexLink from '@/Components/DataTable/RegexLink.vue';
 
 const props = defineProps({
     paginationSettings: {type: Object, required: true},
@@ -69,74 +71,69 @@ const fetchBoms = async () => {
 
 const tableInstance = useTable(defaultData, fetchBoms, storageInstance);
 
-const {getColumn, isVisible, getSearchGlobalValue, getSearchValues} = tableInstance;
-
-const r = (field, string) => applyFilterRegex(string, getSearchGlobalValue(), getSearchValues(field));
+const {getColumn, isVisible, r} = tableInstance;
 
 provide('tableInstance', tableInstance);
 </script>
 
 <template>
-    <DataTable v-model:rows="rows"
-               v-model="activeData"
-               :loading="loading"
-               :pagination-settings="paginationSettings"
-               :date-settings="dateSettings"
-    >
+    <div class="mx-0 lg:mx-4">
+        <DataTable v-model:rows="rows"
+                   v-model="activeData"
+                   :loading="loading"
+                   :pagination-settings="paginationSettings"
+                   :date-settings="dateSettings"
+        >
 
-        <Column sticky class="w-16" options>
-            <template #body="{ row }">
-                <a :href="row.edit_bom_route"
-                   class="bg-amber-500 p-1.5 rounded-sm text-white inline-flex"
-                   title="Edit"
-                >
-                    <i class="pi pi-pen-to-square"></i>
-                </a>
-            </template>
-        </Column>
-        <Column :column="getColumn('id')" v-if="isVisible('id')" sortable type="string">
-            <template #body="{ row }">
-                <a :href="row.edit_bom_route" title="Edit" v-html="r('id', row.id)"></a>
-            </template>
-        </Column>
-        <Column :column="getColumn('name')" v-if="isVisible('name')" sortable type="string">
-            <template #body="{ row }">
-                <a :href="row.edit_bom_route" title="Edit" v-html="r('name', row.name)"></a>
-            </template>
-        </Column>
-        <Column :column="getColumn('version')" v-if="isVisible('version')" class="text-center">
-            <template #body="{ row }">
-                <a :href="row.edit_version_route" title="Edit" v-if="row.version">v{{ row.version }}</a>
-            </template>
-        </Column>
-        <Column :column="getColumn('created_at')" v-if="isVisible('created_at')" sortable type="date">
-            <template #body="{ row }">
-                <a :href="row.edit_bom_route"
-                   title="Edit"
-                >
-                    {{ formatDate(row.created_at, dateSettings.format, dateSettings.separator) }}
-                </a>
-            </template>
-        </Column>
-        <Column :column="getColumn('updated_at')" v-if="isVisible('updated_at')" sortable type="date">
-            <template #body="{ row }">
-                <a :href="row.edit_bom_route"
-                   title="Edit"
-                >
-                    {{ formatDate(row.updated_at, dateSettings.format, dateSettings.separator) }}
-                </a>
-            </template>
-        </Column>
-        <Column :column="getColumn('active')" v-if="isVisible('active')" sortable type="boolean"
-                class="text-center">
-            <template #body="{ row, setConstraintsCb }">
-                <button :class="{'text-green-500': row.active, 'text-red-500': !row.active}"
-                        @click="setConstraintsCb(row.active)"
-                >
-                    <i v-if="row.active" class="pi pi-check-circle" title="Active"></i>
-                    <i v-else class="pi pi-times-circle" title="Inactive"></i>
-                </button>
-            </template>
-        </Column>
-    </DataTable>
+            <Column sticky class="w-16" options>
+                <template #body="{ row }">
+                    <Link :href="route('admin.boms.edit', row)"
+                          class="bg-amber-500 p-1.5 rounded-sm text-white inline-flex"
+                          title="Edit"
+                    >
+                        <i class="pi pi-pen-to-square"></i>
+                    </Link>
+                </template>
+            </Column>
+            <Column :column="getColumn('id')" v-if="isVisible('id')" sortable type="string">
+                <template #body="{ row }">
+                    <RegexLink :href="route('admin.boms.edit', row)" title="Edit" :html="r('id', row.id)"/>
+                </template>
+            </Column>
+            <Column :column="getColumn('name')" v-if="isVisible('name')" sortable type="string">
+                <template #body="{ row }">
+                    <RegexLink :href="route('admin.boms.edit', row)" title="Edit" :html="r('name', row.name)"/>
+                </template>
+            </Column>
+            <Column :column="getColumn('version')" v-if="isVisible('version')" class="text-center">
+                <template #body="{ row }">
+                    <Link :href="route('admin.bom-versions.edit', row)" title="Edit" v-if="row.version">v{{
+                            row.version
+                        }}
+                    </Link>
+                </template>
+            </Column>
+            <Column :column="getColumn('created_at')" v-if="isVisible('created_at')" sortable type="date">
+                <template #body="{ row }">
+                    <Link :href="route('admin.boms.edit', row)"
+                          title="Edit"
+                    >
+                        {{ formatDate(row.created_at, dateSettings.format, dateSettings.separator) }}
+                    </Link>
+                </template>
+            </Column>
+            <Column :column="getColumn('updated_at')" v-if="isVisible('updated_at')" sortable type="date">
+                <template #body="{ row }">
+                    <Link :href="route('admin.boms.edit', row)"
+                          title="Edit"
+                    >
+                        {{ formatDate(row.updated_at, dateSettings.format, dateSettings.separator) }}
+                    </Link>
+                </template>
+            </Column>
+            <Column :column="getColumn('active')" v-if="isVisible('active')" sortable type="active"
+                    class="text-center">
+            </Column>
+        </DataTable>
+    </div>
 </template>

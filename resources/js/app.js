@@ -6,6 +6,7 @@ import AdminLayout from '@/Layouts/Admin/Layout.vue';
 import {createPinia} from 'pinia';
 import Vue3Toastify, {toast} from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
+import {ZiggyVue} from 'ziggy-js';
 
 createInertiaApp({
     progress: {
@@ -29,15 +30,17 @@ createInertiaApp({
 
         createApp({render: () => h(App, props)})
             .use(plugin)
-            .use(pinia).use(Vue3Toastify, {
-            autoClose: 3000,
-            position: toast.POSITION.BOTTOM_RIGHT,
-            style: {
-                fontSize: '0.75rem',
-                minWidth: '320px',
-                width: 'auto',
-            },
-        })
+            .use(ZiggyVue)
+            .use(pinia)
+            .use(Vue3Toastify, {
+                autoClose: 3000,
+                position: toast.POSITION.BOTTOM_RIGHT,
+                style: {
+                    fontSize: '0.75rem',
+                    minWidth: '320px',
+                    width: 'auto',
+                },
+            })
             .mount(el);
     },
 });

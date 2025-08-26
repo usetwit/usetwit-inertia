@@ -1,5 +1,6 @@
 import {cloneDeep, debounce, difference} from 'lodash';
 import {watch} from 'vue';
+import {applyFilterRegex} from '@/helpers.js';
 
 export default function useTable(defaultData, fetchFn, storageInstance) {
 
@@ -8,6 +9,8 @@ export default function useTable(defaultData, fetchFn, storageInstance) {
     const getColumn = field => {
         return activeData.value.columns.find(col => col.field === field) || null;
     };
+
+    const r = (field, string) => applyFilterRegex(string, getSearchGlobalValue(), getSearchValues(field));
 
     const getSearchGlobalValue = () => {
         return activeData.value.filters?.global?.constraints[0]?.value || null;
@@ -40,6 +43,7 @@ export default function useTable(defaultData, fetchFn, storageInstance) {
             number: 'equals',
             date: 'date_equals',
             boolean: 'equals',
+            active: 'equals',
             string: 'contains',
         };
 
@@ -51,6 +55,7 @@ export default function useTable(defaultData, fetchFn, storageInstance) {
             number: 'equals',
             date: 'date_equals',
             boolean: 'equals',
+            active: 'equals',
             string: 'equals',
         };
 
@@ -139,5 +144,6 @@ export default function useTable(defaultData, fetchFn, storageInstance) {
         clearFilters,
         clearFilter,
         clearSort,
+        r,
     };
 }

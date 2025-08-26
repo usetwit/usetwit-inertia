@@ -1,24 +1,24 @@
 <script setup>
-import { inject } from 'vue'
+import {inject} from 'vue';
 
 const props = defineProps({
-    type: { type: String },
-})
+    type: {type: String},
+});
 
-const constraints = defineModel()
-const emit = defineEmits(['clear', 'apply'])
+const constraints = defineModel();
+const emit = defineEmits(['clear', 'apply']);
 
-const { getModeFromMap } = inject('tableInstance')
+const {getModeFromMap} = inject('tableInstance');
 
 const clear = () => {
-    const mode = getModeFromMap(props.type)
-    constraints.value = [{ value: null, mode }]
-    emit('clear')
-}
+    const mode = getModeFromMap(props.type);
+    constraints.value = [{value: null, mode}];
+    emit('clear');
+};
 
 const apply = () => {
-    emit('apply')
-}
+    emit('apply');
+};
 </script>
 
 <template>

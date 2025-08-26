@@ -26,6 +26,8 @@
     <meta name="msapplication-TileImage" content="{{ asset('images/favicons/ms-icon-144x144.png', true) }}">
     <meta name="theme-color" content="#1e293b">
 
+    @routes
+    
     @vite(['resources/js/app.js', 'resources/css/app.css'])
 
     @inertiaHead

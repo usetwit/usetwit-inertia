@@ -22,7 +22,8 @@
         "spatie/laravel-permission": "^6.21",
         "spatie/laravel-settings": "^3.4.2",
         "spatie/laravel-sluggable": "^3.7.4",
-        "symfony/intl": "^7.2.0"
+        "symfony/intl": "^7.2.0",
+        "tightenco/ziggy": "^2.5"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

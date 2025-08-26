@@ -1,41 +1,41 @@
 <script setup>
-import useDropdown from '../../composables/useDropdown.js'
-import InputText from '../Form/InputText.vue'
-import { computed, inject } from 'vue'
-import FilterDropdown from './FilterDropdown.vue'
-import Checkbox from '../Form/Checkbox.vue'
-import Datepicker from '../Form/Datepicker.vue'
+import useDropdown from '../../composables/useDropdown.js';
+import InputText from '../Form/InputText.vue';
+import {computed, inject} from 'vue';
+import FilterDropdown from './FilterDropdown.vue';
+import Checkbox from '../Form/Checkbox.vue';
+import Datepicker from '../Form/Datepicker.vue';
 
 const props = defineProps({
-    column: { type: Object, required: true },
-    sortObj: { type: Object, default: null },
-    filtered: { type: Array, required: true },
-})
+    column: {type: Object, required: true},
+    sortObj: {type: Object, default: null},
+    filtered: {type: Array, required: true},
+});
 
-const filters = defineModel()
+const filters = defineModel();
 
-const emit = defineEmits(['filter', 'apply'])
+const emit = defineEmits(['filter', 'apply']);
 
 const {
     inputRef,
     dropdownStyle,
     showDropdown,
     toggleDropdown,
-} = useDropdown('right')
+} = useDropdown('right');
 
-defineExpose({ inputRef })
+defineExpose({inputRef});
 
 const apply = () => {
-    showDropdown.value = false
-    emit('filter')
-}
+    showDropdown.value = false;
+    emit('filter');
+};
 
-const settings = inject('dateSettings')
+const settings = inject('dateSettings');
 
-const { getModifiedFields } = inject('tableInstance')
+const {getModifiedFields} = inject('tableInstance');
 
-const filtered = computed(() => props.filtered.includes(props.column.field))
-const modified = computed(() => getModifiedFields(filters.value, props.filtered)?.includes(props.column.field))
+const filtered = computed(() => props.filtered.includes(props.column.field));
+const modified = computed(() => getModifiedFields(filters.value, props.filtered)?.includes(props.column.field));
 </script>
 
 <template>
@@ -98,7 +98,7 @@ const modified = computed(() => getModifiedFields(filters.value, props.filtered)
                 </template>
             </FilterDropdown>
 
-            <FilterDropdown v-else-if="column.type === 'boolean'"
+            <FilterDropdown v-else-if="column.type === 'boolean' || column.type === 'active'"
                             :column="column"
                             v-model="filters[column.field]"
                             @apply="apply"
