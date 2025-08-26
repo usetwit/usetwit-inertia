@@ -1,5 +1,4 @@
 import {cloneDeep, debounce, difference} from 'lodash';
-import {watch} from 'vue';
 import {applyFilterRegex} from '@/helpers.js';
 
 export default function useTable(defaultData, fetchFn, storageInstance) {
@@ -33,10 +32,6 @@ export default function useTable(defaultData, fetchFn, storageInstance) {
     };
 
     const isVisible = field => getVisibleFields().includes(field);
-
-    watch(activeData, () => {
-        saveToStorage();
-    }, {deep: true});
 
     const getModeFromMap = fieldType => {
         const modeMapping = {
@@ -123,9 +118,16 @@ export default function useTable(defaultData, fetchFn, storageInstance) {
         if (doFetch) {
             fetch();
         }
+
+        saveToStorage();
     };
 
     filter(true, false);
+
+    const fetchAndSave = () => {
+        fetch();
+        saveToStorage();
+    };
 
     return {
         getColumn,
@@ -140,6 +142,7 @@ export default function useTable(defaultData, fetchFn, storageInstance) {
         getVisibleFields,
         reset,
         fetch,
+        fetchAndSave,
         filter,
         clearFilters,
         clearFilter,

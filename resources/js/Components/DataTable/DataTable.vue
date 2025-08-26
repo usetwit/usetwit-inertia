@@ -65,7 +65,7 @@ watch(rows, () => {
     nextTick(() => updateStyle());
 });
 
-const {fetch, filter, getFilteredFields, reset, clearFilters} = inject('tableInstance');
+const {fetchAndSave, filter, getFilteredFields, reset, clearFilters} = inject('tableInstance');
 </script>
 
 <template>
@@ -88,7 +88,7 @@ const {fetch, filter, getFilteredFields, reset, clearFilters} = inject('tableIns
                     label="Clear"
                     :loading="loading"
             />
-            <Button @click="fetch"
+            <Button @click="fetchAndSave"
                     variant="success"
                     border
                     icon="pi pi-refresh"
@@ -111,7 +111,8 @@ const {fetch, filter, getFilteredFields, reset, clearFilters} = inject('tableIns
         <i class="pi pi-info-circle"></i> Hold ctrl to sort multiple columns
     </div>
 
-    <Paginator v-model="activeData.pagination" :settings="paginationSettings.per_page" @changed="fetch" class="mt-8"/>
+    <Paginator v-model="activeData.pagination" :settings="paginationSettings.per_page" @changed="fetchAndSave"
+               class="mt-8"/>
 
     <div class="my-3 overflow-x-auto relative">
 
@@ -129,7 +130,7 @@ const {fetch, filter, getFilteredFields, reset, clearFilters} = inject('tableIns
                             :is-last="index === columns.length - 1"
                             :column="col"
                             :table="tableRef"
-                            @sort="fetch"
+                            @sort="fetchAndSave"
                             @filter="filter"
                 />
             </tr>
@@ -163,7 +164,7 @@ const {fetch, filter, getFilteredFields, reset, clearFilters} = inject('tableIns
         </div>
     </div>
 
-    <Paginator v-model="activeData.pagination" :settings="paginationSettings.per_page" @changed="fetch"/>
+    <Paginator v-model="activeData.pagination" :settings="paginationSettings.per_page" @changed="fetchAndSave"/>
 </template>
 
 <style scoped>
