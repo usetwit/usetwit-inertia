@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Settings\GeneralSettings;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -189,6 +190,7 @@ class HandleAdminInertiaRequests extends Middleware
     {
         $user = Auth::user();
         $userData = null;
+        $settings = app(GeneralSettings::class);
 
         if ($user) {
             $filename = $user->profileImages()->default()->value('filename');
@@ -213,6 +215,8 @@ class HandleAdminInertiaRequests extends Middleware
             'version' => config('app.version'),
             'sidebar_items' => $this->sidebarItems(),
             'logo' => asset('images/logo.svg', true),
+            'dateSettings' => $settings->dateSettings(),
+            'paginationSettings' => $settings->paginationSettings(),
         ]);
     }
 }

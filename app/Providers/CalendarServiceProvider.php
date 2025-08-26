@@ -13,7 +13,7 @@ class CalendarServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singleton(CalendarService::class, function ($app) {
-            return new CalendarService();
+            return new CalendarService;
         });
     }
 

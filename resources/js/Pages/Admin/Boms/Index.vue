@@ -4,7 +4,7 @@ import useAxios from '@/composables/useAxios.js';
 import DataTable from '@/components/DataTable/DataTable.vue';
 import Column from '@/components/DataTable/Column.vue';
 import useTable from '@/composables/useTable.js';
-import {formatDate, applyFilterRegex} from '@/helpers.js';
+import {formatDate} from '@/helpers.js';
 import useStorage from '@/composables/useStorage.js';
 import {Link} from '@inertiajs/vue3';
 import RegexLink from '@/Components/DataTable/RegexLink.vue';
@@ -12,7 +12,6 @@ import RegexLink from '@/Components/DataTable/RegexLink.vue';
 const props = defineProps({
     paginationSettings: {type: Object, required: true},
     dateSettings: {type: Object, required: true},
-    routes: {type: Object, required: true},
 });
 
 const rows = ref([]);
@@ -49,7 +48,7 @@ const {activeData} = storageInstance;
 const fetchBoms = async () => {
     loading.value = true;
 
-    const {data, errors, getResponse} = useAxios(props.routes.get_boms, {
+    const {data, errors, getResponse} = useAxios(route('admin.boms.get-boms'), {
         filters: activeData.value.filters,
         page: activeData.value.pagination.page,
         per_page: activeData.value.pagination.per_page,
@@ -115,18 +114,14 @@ provide('tableInstance', tableInstance);
             </Column>
             <Column :column="getColumn('created_at')" v-if="isVisible('created_at')" sortable type="date">
                 <template #body="{ row }">
-                    <Link :href="route('admin.boms.edit', row)"
-                          title="Edit"
-                    >
+                    <Link :href="route('admin.boms.edit', row)" title="Edit">
                         {{ formatDate(row.created_at, dateSettings.format, dateSettings.separator) }}
                     </Link>
                 </template>
             </Column>
             <Column :column="getColumn('updated_at')" v-if="isVisible('updated_at')" sortable type="date">
                 <template #body="{ row }">
-                    <Link :href="route('admin.boms.edit', row)"
-                          title="Edit"
-                    >
+                    <Link :href="route('admin.boms.edit', row)" title="Edit">
                         {{ formatDate(row.updated_at, dateSettings.format, dateSettings.separator) }}
                     </Link>
                 </template>

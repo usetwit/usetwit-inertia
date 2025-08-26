@@ -1,10 +1,10 @@
 <script setup>
-import FilterSelectOperator from './FilterSelectOperator.vue';
-import FilterButtonClearApply from './FilterButtonClearApply.vue';
-import FilterSelectMode from './FilterSelectMode.vue';
-import InputText from '../Form/InputText.vue';
-import FilterButtonAdd from './FilterButtonAdd.vue';
-import FilterButtonRemove from './FilterButtonRemove.vue';
+import FilterSelectOperator from '@/Components/DataTable/FilterSelectOperator.vue';
+import FilterButtonClearApply from '@/Components/DataTable/FilterButtonClearApply.vue';
+import FilterSelectMode from '@/Components/DataTable/FilterSelectMode.vue';
+import InputText from '@/Components/Form/InputText.vue';
+import FilterButtonAdd from '@/Components/DataTable/FilterButtonAdd.vue';
+import FilterButtonRemove from '@/Components/DataTable/FilterButtonRemove.vue';
 
 const props = defineProps({
     column: {type: Object, required: true},

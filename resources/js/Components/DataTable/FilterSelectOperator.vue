@@ -1,12 +1,12 @@
 <script setup>
-import Select from '../Form/Select.vue'
+import Select from '../Form/Select.vue';
 
-const model = defineModel()
+const model = defineModel();
 
 const options = [
-    { label: 'Match All', value: 'and' },
-    { label: 'Match Any', value: 'or' },
-]
+    {label: 'Match All', value: 'and'},
+    {label: 'Match Any', value: 'or'},
+];
 </script>
 
 <template>

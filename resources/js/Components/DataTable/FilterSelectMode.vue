@@ -1,11 +1,11 @@
 <script setup>
-import Select from '../Form/Select.vue'
+import Select from '../Form/Select.vue';
 
 const props = defineProps({
     type: {type: String, required: true},
-})
+});
 
-const mode = defineModel()
+const mode = defineModel();
 
 const modeTexts = {
     contains: 'Contains',
@@ -23,7 +23,7 @@ const modeTexts = {
     date_gte: 'Date greater than or equal',
     date_lt: 'Date less than',
     date_lte: 'Date less than or equal',
-}
+};
 
 const stringModes = [
     'contains',
@@ -35,7 +35,7 @@ const stringModes = [
     'gte',
     'lt',
     'lte',
-]
+];
 
 const dateModes = [
     'date_equals',
@@ -44,12 +44,12 @@ const dateModes = [
     'date_gte',
     'date_lt',
     'date_lte',
-]
+];
 
 const modes = {
     string: stringModes.map(mode => ({mode, label: modeTexts[mode]})),
     date: dateModes.map(mode => ({mode, label: modeTexts[mode]})),
-}
+};
 </script>
 
 <template>

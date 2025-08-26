@@ -48,9 +48,6 @@ class BomController extends Controller
 
     public function index(GeneralSettings $settings)
     {
-        $dateSettings = $settings->dateSettings();
-        $paginationSettings = $settings->paginationSettings();
-
         $routes = [
             'get_boms' => route('admin.boms.get-boms'),
         ];
@@ -58,7 +55,7 @@ class BomController extends Controller
         $breadcrumbs = Breadcrumbs::generate('admin.boms.index');
         $heading = 'All Boms';
 
-        return Inertia::render('Admin/Boms/Index', compact('dateSettings', 'paginationSettings', 'routes', 'heading', 'breadcrumbs'));
+        return Inertia::render('Admin/Boms/Index', compact('routes', 'heading', 'breadcrumbs'));
     }
 
     public function getBoms(GetBomsRequest $request, FilterService $service, GeneralSettings $settings): JsonResponse
@@ -86,8 +83,6 @@ class BomController extends Controller
                 'slug' => $bom->slug,
                 'active' => $bom->active,
                 'version' => $bom->latestVersion ? $bom->latestVersion->version : null,
-                'edit_version_route' => $bom->latestVersion ? route('admin.bom-versions.edit', $bom->latestVersion) : null,
-                'edit_bom_route' => route('admin.boms.edit', $bom->slug),
                 'created_at' => $bom->created_at->toDateString(),
                 'updated_at' => $bom->updated_at->toDateString(),
             ];
