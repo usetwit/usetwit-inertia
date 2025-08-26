@@ -1,6 +1,6 @@
 <script setup>
 import Navbar from '@/Components/Admin/Navbar/Navbar.vue';
-import {Link, usePage} from '@inertiajs/vue3';
+import {Head, Link, usePage} from '@inertiajs/vue3';
 import {toast} from 'vue3-toastify';
 import Storage from '@/Components/Storage.vue';
 import Sidebar from '@/Components/Admin/Sidebar/Sidebar.vue';
@@ -8,12 +8,13 @@ import {computed} from 'vue';
 
 const page = usePage();
 const user = computed(() => page.props.user);
-const defaultProfileImage = computed(() => page.props.default_profile_image);
+const defaultProfileImage = page.props.default_profile_image;
 const version = computed(() => page.props.version);
 const sidebarItems = computed(() => page.props.sidebar_items);
 const breadcrumbs = computed(() => page.props.breadcrumbs);
+const title = computed(() => [...page.props.breadcrumbs].reverse().map(c => c.title).join(' / ') + ' - useTwit');
 const heading = computed(() => page.props.heading);
-const logo = computed(() => page.props.logo);
+const logo = page.props.logo;
 
 if (page.props.flash?.success) {
     toast.success(page.props.flash.success);
@@ -25,6 +26,7 @@ if (page.props.flash?.error) {
 </script>
 
 <template>
+    <Head :title="title"/>
     <div id="storage">
         <Storage :version="version"/>
     </div>
