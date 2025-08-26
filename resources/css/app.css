@@ -1,0 +1,152 @@
+@import './checkbox.css' layer(base);
+@import './tooltip.css' layer(base);
+@import 'primeicons/primeicons.css';
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@font-face {
+    font-family: 'primeicons';
+    src: url('/node_modules/primeicons/fonts/primeicons.woff2') format('woff2'),
+    url('/node_modules/primeicons/fonts/primeicons.woff') format('woff'),
+    url('/node_modules/primeicons/fonts/primeicons.ttf') format('truetype');
+}
+
+html, body {
+    height: 100%;
+}
+
+body > div[data-page] {
+    min-height: 100%;
+}
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+    *,
+    ::after,
+    ::before,
+    ::backdrop,
+    ::file-selector-button {
+        border-color: var(--color-gray-200, currentColor);
+    }
+}
+
+@layer utilities {
+    @font-face {
+        font-family: 'Inter';
+        src: url('../fonts/Inter-VariableFont_opsz,wght.ttf') format('truetype');
+        font-weight: 100 900;
+        font-style: normal;
+    }
+
+    @font-face {
+        font-family: 'Inter';
+        src: url('../fonts/Inter-Italic-VariableFont_opsz,wght.ttf') format('truetype');
+        font-weight: 100 900;
+        font-style: italic;
+    }
+
+    @font-face {
+        font-family: 'Cabin';
+        src: url('../fonts/Cabin-SemiBoldItalic.ttf') format('truetype');
+        font-weight: 600;
+        font-style: italic;
+    }
+
+    * {
+        font-family: 'Inter', sans-serif;
+    }
+
+    .bg-gradient {
+        background: linear-gradient(
+            45deg,
+            var(--color-yellow-200),
+            var(--color-orange-200),
+            var(--color-red-200),
+            var(--color-fuchsia-200)
+        );
+    }
+
+    .regex-result {
+        @apply font-bold text-orange-500;
+    }
+
+    .dropdown {
+        @apply rounded-lg absolute bg-white shadow-sm border-gray-200 border flex flex-col overflow-y-auto p-1;
+    }
+}
+
+@layer components {
+    h3 {
+        @apply text-xl border-t border-slate-200 text-slate-700 p-4 bg-slate-200 uppercase;
+    }
+}
+
+body {
+    @apply bg-slate-800;
+}
+
+button:not(:disabled),
+label,
+input[type="checkbox"]:not(:disabled),
+input[type="radio"]:not(:disabled) {
+    @apply cursor-pointer;
+}
+
+button:disabled,
+input[type="checkbox"]:disabled,
+input[type="radio"]:disabled {
+    @apply cursor-not-allowed;
+}
+
+.breadcrumbs {
+    > li::before {
+        content: '/';
+        @apply inline-block mx-1.5;
+    }
+
+    > li:first-child::before {
+        content: "";
+        margin: 0;
+    }
+}
+
+#content {
+    @apply bg-white border-y dark:bg-slate-600 lg:border-x border-gray-200 dark:border-slate-500 mx-0 lg:mx-4 overflow-x-auto;
+}
+
+.wysiwyg-button {
+    @apply text-sm rounded-md text-gray-900 p-1 border;
+
+    &:hover {
+        @apply bg-gray-100 dark:bg-slate-700;
+    }
+
+    &.active {
+        @apply bg-blue-500 text-white;
+    }
+}
+
+.wysiwyg-menu-item {
+    @apply px-2 py-1 text-sm rounded-md w-full text-gray-900;
+
+    &:hover {
+        @apply bg-gray-100 dark:bg-slate-700;
+    }
+
+    &.active {
+        @apply bg-blue-500 text-white;
+    }
+}
