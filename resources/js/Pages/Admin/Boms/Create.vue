@@ -5,7 +5,6 @@ import {Form, usePage} from '@inertiajs/vue3';
 import Submit from '@/Components/Form/Submit.vue';
 
 const page = usePage();
-const errors = page.props.errors;
 </script>
 
 <template>
@@ -17,7 +16,7 @@ const errors = page.props.errors;
                 </template>
 
                 <template #input>
-                    <InputText name="name" id="name" :errors="errors" rounded/>
+                    <InputText name="name" id="name" :errors="page.props.errors" rounded show-errors/>
                 </template>
 
                 <template #help>
@@ -31,7 +30,7 @@ const errors = page.props.errors;
                 </template>
 
                 <template #input>
-                    <InputText name="test" id="test" :errors="errors" rounded/>
+                    <InputText name="test" id="test" :errors="page.props.errors" rounded show-errors/>
                 </template>
 
                 <template #help>
@@ -43,7 +42,3 @@ const errors = page.props.errors;
         </Form>
     </div>
 </template>
-
-<style scoped>
-
-</style>

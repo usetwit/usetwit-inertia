@@ -24,7 +24,7 @@ class StoreRequest extends FormRequest
     {
         return [
             'name' => 'required|alpha_num',
-            'test' => 'required|alpha_num',
+            'test' => 'required|alpha_num|min:3',
         ];
     }
 }
