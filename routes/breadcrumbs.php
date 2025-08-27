@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\Bom;
-use App\Models\BomVersion;
 use App\Models\Location;
 use App\Models\User;
 use Diglactic\Breadcrumbs\Breadcrumbs;
@@ -88,7 +87,7 @@ Breadcrumbs::for('admin.boms.index', function (BreadcrumbTrail $trail) {
     $trail->push('All BOMs', route('admin.boms.index'));
 });
 
-Breadcrumbs::for('admin.bom-versions.edit', function (BreadcrumbTrail $trail, BomVersion $bomVersion) {
-    $trail->parent('admin.home');
-    $trail->push('Edit Bom Versions', route('admin.bom-versions.edit', $bomVersion));
+Breadcrumbs::for('admin.boms.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.boms.index');
+    $trail->push('Create BOM', route('admin.boms.create'));
 });

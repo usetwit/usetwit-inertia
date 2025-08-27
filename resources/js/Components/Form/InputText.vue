@@ -4,6 +4,7 @@ import {computed, useTemplateRef} from 'vue';
 const props = defineProps({
     disabled: {type: Boolean, default: false},
     invalid: {type: Boolean, default: false},
+    rounded: {type: Boolean, default: false},
     type: {type: String, default: 'text'},
 });
 
@@ -27,7 +28,7 @@ defineExpose({
 <template>
     <input :type="type"
            class="ring-0 outline-offset-0 focus:outline focus:invalid:outline-red-600/50 hover:invalid:border-red-500 invalid:border-red-600 focus:invalid:border-red-600 leading-5 border align-middle py-2 px-2"
-           :class="setClasses"
+           :class="[{ 'rounded-lg': rounded }, setClasses]"
            :disabled="disabled"
            v-model="model"
            ref="input"

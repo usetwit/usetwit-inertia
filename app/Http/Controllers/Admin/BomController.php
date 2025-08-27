@@ -12,6 +12,7 @@ use App\Settings\GeneralSettings;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Illuminate\Http\JsonResponse;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class BomController extends Controller
 {
@@ -46,16 +47,20 @@ class BomController extends Controller
         return response()->json(['exists' => $exists]);
     }
 
-    public function index(GeneralSettings $settings)
+    public function index(): Response
     {
-        $routes = [
-            'get_boms' => route('admin.boms.get-boms'),
-        ];
-
         $breadcrumbs = Breadcrumbs::generate('admin.boms.index');
-        $heading = 'All Boms';
+        $heading = 'All BOMs';
 
-        return Inertia::render('Admin/Boms/Index', compact('routes', 'heading', 'breadcrumbs'));
+        return Inertia::render('Admin/Boms/Index', compact('heading', 'breadcrumbs'));
+    }
+
+    public function create(): Response
+    {
+        $breadcrumbs = Breadcrumbs::generate('admin.boms.create');
+        $heading = 'Create BOM';
+
+        return Inertia::render('Admin/Boms/Create', compact('heading', 'breadcrumbs'));
     }
 
     public function getBoms(GetBomsRequest $request, FilterService $service, GeneralSettings $settings): JsonResponse
@@ -82,7 +87,7 @@ class BomController extends Controller
                 'name' => $bom->name,
                 'slug' => $bom->slug,
                 'active' => $bom->active,
-                'version' => $bom->latestVersion ? $bom->latestVersion->version : null,
+                'version' => $bom->latestVersion?->version,
                 'created_at' => $bom->created_at->toDateString(),
                 'updated_at' => $bom->updated_at->toDateString(),
             ];

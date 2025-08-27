@@ -76,7 +76,7 @@ provide('tableInstance', tableInstance);
 </script>
 
 <template>
-    <div class="mx-0 lg:mx-4">
+    <div class="content-margin">
         <DataTable v-model:rows="rows"
                    v-model="activeData"
                    :loading="loading"

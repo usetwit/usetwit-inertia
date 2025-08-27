@@ -1,30 +1,30 @@
 <script setup>
-import { computed, inject } from 'vue'
-import useDropdown from '../../composables/useDropdown.js'
-import Checkbox from '../Form/Checkbox.vue'
+import {computed, inject} from 'vue';
+import useDropdown from '@/composables/useDropdown.js';
+import Checkbox from '@/Components/Form/Checkbox.vue';
 
-const columns = defineModel()
+const columns = defineModel();
 
 const sorted = computed(() => {
-    return columns.value.sort((a, b) => a.label.localeCompare(b.label))
-})
+    return columns.value.toSorted((a, b) => a.label.localeCompare(b.label));
+});
 
-const { clearFilter, clearSort, filter, getSortedFields, getFilteredFields } = inject('tableInstance')
+const {clearFilter, clearSort, filter, getSortedFields, getFilteredFields} = inject('tableInstance');
 
 const clearFilterAndSort = field => {
-    const doFetch = getSortedFields().includes(field) || getFilteredFields().includes(field)
+    const doFetch = getSortedFields().includes(field) || getFilteredFields().includes(field);
 
-    clearSort(field)
-    clearFilter(field)
-    filter(doFetch)
-}
+    clearSort(field);
+    clearFilter(field);
+    filter(doFetch);
+};
 
 const {
     inputRef,
     dropdownStyle,
     showDropdown,
     toggleDropdown,
-} = useDropdown()
+} = useDropdown();
 </script>
 
 <template>
