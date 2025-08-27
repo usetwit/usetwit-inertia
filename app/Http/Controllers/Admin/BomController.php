@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Boms\CheckNameRequest;
 use App\Http\Requests\Admin\Boms\GetBomsRequest;
+use App\Http\Requests\Admin\Boms\StoreRequest;
 use App\Http\Requests\Admin\Boms\UpdateRequest;
 use App\Models\Bom;
 use App\Services\FilterService;
@@ -61,6 +62,11 @@ class BomController extends Controller
         $heading = 'Create BOM';
 
         return Inertia::render('Admin/Boms/Create', compact('heading', 'breadcrumbs'));
+    }
+
+    public function store(StoreRequest $request)
+    {
+        return 'HI';
     }
 
     public function getBoms(GetBomsRequest $request, FilterService $service, GeneralSettings $settings): JsonResponse

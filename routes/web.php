@@ -128,6 +128,7 @@ Route::prefix('admin')
                 Route::get('', 'index')->name('index')->can('viewAny', Bom::class);
                 Route::get('{bom}/edit', 'edit')->name('edit')->can('edit', 'bom');
                 Route::get('create', 'create')->name('create')->can('boms.create');
+                Route::post('store', 'store')->name('store')->can('boms.create');
                 Route::post('checkName', 'checkName')->name('checkName');
                 Route::patch('{bom}', 'update')->name('update')->can('edit', 'bom');
                 Route::post('get-boms', 'getBoms')->name('get-boms')->can('viewAny', Bom::class);

@@ -1,10 +1,10 @@
 <script setup>
 import Navbar from '@/Components/Admin/Navbar/Navbar.vue';
-import {Head, Link, usePage} from '@inertiajs/vue3';
+import {Head, Link, router, usePage} from '@inertiajs/vue3';
 import {toast} from 'vue3-toastify';
 import Storage from '@/Components/Storage.vue';
 import Sidebar from '@/Components/Admin/Sidebar/Sidebar.vue';
-import {computed} from 'vue';
+import {computed, watch} from 'vue';
 
 const page = usePage();
 const user = computed(() => page.props.user);
@@ -15,6 +15,7 @@ const breadcrumbs = computed(() => page.props.breadcrumbs);
 const title = computed(() => [...page.props.breadcrumbs].reverse().map(c => c.title).join(' / ') + ' - useTwit');
 const heading = computed(() => page.props.heading);
 const logo = page.props.logo;
+const errors = computed(() => page.props.errors);
 
 if (page.props.flash?.success) {
     toast.success(page.props.flash.success);
@@ -23,6 +24,13 @@ if (page.props.flash?.success) {
 if (page.props.flash?.error) {
     toast.error(page.props.flash.error);
 }
+
+watch(errors, (val) => {
+    const messages = Object.values(val).flat().join('\n');
+    if (messages) {
+        toast.error(messages);
+    }
+});
 </script>
 
 <template>
@@ -70,26 +78,6 @@ if (page.props.flash?.error) {
     </div>
 
     <footer class="bg-slate-800 py-8 border-t border-slate-700">
-        <div class="max-w-6xl mx-auto text-white">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-                <div class="space-y-2">
-                    <a href="#home" class="block hover:underline">Home</a>
-                    <a href="#about" class="block hover:underline">About</a>
-                    <a href="#services" class="block hover:underline">Services</a>
-                    <a href="#contact" class="block hover:underline">Contact</a>
-                </div>
-                <div class="space-y-2">
-                    <a href="https://facebook.com" target="_blank" aria-label="Facebook" class="block hover:underline">Facebook</a>
-                    <a href="https://twitter.com" target="_blank" aria-label="Twitter"
-                       class="block hover:underline">Twitter</a>
-                    <a href="https://instagram.com" target="_blank" aria-label="Instagram"
-                       class="block hover:underline">Instagram</a>
-                </div>
-                <div>
-                    <p class="text-sm">Contact us: <a href="mailto:info@example.com" class="hover:underline">info@example.com</a>
-                    </p>
-                </div>
-            </div>
-        </div>
+        footer
     </footer>
 </template>

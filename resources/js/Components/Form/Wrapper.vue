@@ -6,7 +6,7 @@ const props = defineProps({
 </script>
 
 <template>
-    <div class="border-b border-gray-200 sm:p-4 gap-1 sm:gap-2"
+    <div class="border-b border-gray-200 p-2 sm:p-4 gap-1 sm:gap-2"
          :class="vertical ? 'flex flex-col': 'grid grid-cols-1 sm:grid-cols-2'"
     >
         <div class="min-w-0 text-slate-700 pt-1.5 break-words">

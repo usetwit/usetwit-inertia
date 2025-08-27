@@ -5,6 +5,7 @@ const props = defineProps({
     disabled: {type: Boolean, default: false},
     invalid: {type: Boolean, default: false},
     rounded: {type: Boolean, default: false},
+    errors: {type: Object, default: {}},
     type: {type: String, default: 'text'},
 });
 
