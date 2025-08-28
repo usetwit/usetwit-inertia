@@ -330,13 +330,13 @@ class FilterService
     /**
      * @throws FilterServiceGetTypeInvalidException
      */
-    public function makeValidationRules(array $filterRules): array
+    public function makeValidationRules(array $filterRules, array $unfilterable = []): array
     {
 
         $filters = $this->makeValidationFilterRules($filterRules);
         $sort = $this->makeValidationSortRules(array_diff(Arr::flatten($filterRules), ['global']));
         $perPage = $this->makePerPageRules();
-        $visible = $this->makeVisibleRules($filterRules);
+        $visible = $this->makeVisibleRules($filterRules, $unfilterable);
 
         return array_merge($filters, $sort, $perPage, $visible);
     }
@@ -351,13 +351,13 @@ class FilterService
         ];
     }
 
-    public function makeVisibleRules(array $filterRules): array
+    public function makeVisibleRules(array $filterRules, array $unfilterable): array
     {
         return [
             'visible' => 'array',
             'visible.*' => [
                 'string',
-                Rule::in(array_diff(Arr::flatten($filterRules), ['global'])),
+                Rule::in(array_diff(array_merge(Arr::flatten($filterRules), $unfilterable), ['global'])),
             ],
         ];
     }

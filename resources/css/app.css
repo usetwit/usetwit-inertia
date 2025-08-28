@@ -123,6 +123,10 @@ input[type="radio"]:disabled {
     }
 }
 
+.input-error-msg {
+    @apply text-xs text-red-600 mt-1;
+}
+
 .content-margin {
     @apply mx-0 lg:mx-4;
 }

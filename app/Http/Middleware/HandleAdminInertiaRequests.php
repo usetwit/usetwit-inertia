@@ -102,6 +102,7 @@ class HandleAdminInertiaRequests extends Middleware
             'logo' => asset('images/logo.svg', true),
             'dateSettings' => $settings->dateSettings(),
             'paginationSettings' => $settings->paginationSettings(),
+            'permissions' => $user?->getAllPermissions()->pluck('name'),
         ]);
     }
 

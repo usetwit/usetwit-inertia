@@ -15,6 +15,8 @@ class BomSeeder extends Seeder
     {
         BomVersion::factory()->for(Bom::factory())->create();
 
-        Bom::factory(25)->create();
+        Bom::factory(25)->create([
+            'user_id' => 1,
+        ]);
     }
 }

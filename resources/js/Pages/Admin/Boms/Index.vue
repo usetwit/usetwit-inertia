@@ -1,13 +1,15 @@
 <script setup>
-import {provide, ref} from 'vue';
+import {computed, provide, ref} from 'vue';
 import useAxios from '@/composables/useAxios.js';
 import DataTable from '@/components/DataTable/DataTable.vue';
 import Column from '@/components/DataTable/Column.vue';
 import useTable from '@/composables/useTable.js';
 import {formatDate} from '@/helpers.js';
 import useStorage from '@/composables/useStorage.js';
-import {Link} from '@inertiajs/vue3';
+import {Link, usePage} from '@inertiajs/vue3';
 import RegexLink from '@/Components/DataTable/RegexLink.vue';
+import {route} from 'ziggy-js';
+import Button from '@/Components/Form/Button.vue';
 
 const props = defineProps({
     paginationSettings: {type: Object, required: true},
@@ -33,6 +35,7 @@ const defaultData = {
         {field: 'created_at', label: 'Created Date', visible: true, order: 4},
         {field: 'updated_at', label: 'Updated Date', visible: true, order: 5},
         {field: 'active', label: 'Active', visible: true, order: 6},
+        {field: 'username', label: 'Username', visible: true, order: 7},
     ],
     sort: [{field: 'name', order: 'asc'}],
     pagination: {
@@ -41,6 +44,10 @@ const defaultData = {
         total: 0,
     },
 };
+
+const page = usePage();
+const permissions = computed(() => page.props.permissions);
+const user = computed(() => page.props.user);
 
 const storageInstance = useStorage('boms-index', defaultData);
 const {activeData} = storageInstance;
@@ -77,6 +84,10 @@ provide('tableInstance', tableInstance);
 
 <template>
     <div class="content-margin">
+        <div v-if="permissions.includes('boms.create')" class="flex justify-end mb-4">
+            <Button icon="pi pi-sparkles">Create New BOM</Button>
+        </div>
+
         <DataTable v-model:rows="rows"
                    v-model="activeData"
                    :loading="loading"
@@ -86,9 +97,11 @@ provide('tableInstance', tableInstance);
 
             <Column sticky class="w-16" options>
                 <template #body="{ row }">
-                    <Link :href="route('admin.boms.edit', row)"
-                          class="bg-amber-500 p-1.5 rounded-sm text-white inline-flex"
-                          title="Edit"
+                    <Link
+                        v-if="permissions.includes('boms.edit') || (permissions.includes('boms.edit.self') && row.user_id === user.id)"
+                        :href="route('admin.boms.edit', row)"
+                        class="bg-amber-500 p-1.5 rounded-sm text-white inline-flex"
+                        title="Edit"
                     >
                         <i class="pi pi-pen-to-square"></i>
                     </Link>
@@ -129,6 +142,7 @@ provide('tableInstance', tableInstance);
             <Column :column="getColumn('active')" v-if="isVisible('active')" sortable type="active"
                     class="text-center">
             </Column>
+            <Column :column="getColumn('username')" v-if="isVisible('username')"/>
         </DataTable>
     </div>
 </template>

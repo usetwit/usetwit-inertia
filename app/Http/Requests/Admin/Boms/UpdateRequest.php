@@ -13,7 +13,7 @@ class UpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->can('edit', $this->route('boms'));
+        return $this->user()->can('edit', $this->route('bom'));
     }
 
     /**
@@ -28,7 +28,7 @@ class UpdateRequest extends FormRequest
                 'required',
                 'string',
                 'max:255',
-                Rule::unique('boms', 'name')->ignore($this->route('boms')->id),
+                Rule::unique('boms', 'name')->ignore($this->route('bom')->id),
             ],
             'description' => [
                 'string',

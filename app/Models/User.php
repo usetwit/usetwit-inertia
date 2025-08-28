@@ -118,4 +118,9 @@ class User extends Authenticatable implements Authorizable
     {
         return $this->hasMany(Image::class);
     }
+
+    public function boms(): HasMany
+    {
+        return $this->hasMany(Bom::class);
+    }
 }

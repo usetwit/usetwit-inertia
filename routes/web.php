@@ -125,13 +125,13 @@ Route::prefix('admin')
 
             /* Boms */
             Route::prefix('boms')->name('boms.')->controller('BomController')->group(function () {
-                Route::get('', 'index')->name('index')->can('viewAny', Bom::class);
+                Route::get('', 'index')->name('index')->can('view', Bom::class);
                 Route::get('{bom}/edit', 'edit')->name('edit')->can('edit', 'bom');
+                Route::patch('{bom}', 'update')->name('update')->can('edit', 'bom');
                 Route::get('create', 'create')->name('create')->can('boms.create');
                 Route::post('store', 'store')->name('store')->can('boms.create');
-                Route::post('checkName', 'checkName')->name('checkName');
-                Route::patch('{bom}', 'update')->name('update')->can('edit', 'bom');
-                Route::post('get-boms', 'getBoms')->name('get-boms')->can('viewAny', Bom::class);
+                Route::post('name-exists', 'nameExists')->name('name-exists')->can('view', Bom::class);
+                Route::post('get-boms', 'getBoms')->name('get-boms')->can('view', Bom::class);
             });
 
             Route::prefix('bom-versions')

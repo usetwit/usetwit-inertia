@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Models\Bom;
 use App\Models\User;
 
 class BomPolicy
@@ -11,14 +12,9 @@ class BomPolicy
         return $user->can('boms.view');
     }
 
-    public function viewAny(User $user): bool
+    public function edit(User $user, Bom $bom): bool
     {
-        return $user->can('boms.view') || $user->can('boms.edit');
-    }
-
-    public function edit(User $user): bool
-    {
-        return $user->can('boms.edit');
+        return $user->can('boms.edit', $bom);
     }
 
     public function create(User $user): bool

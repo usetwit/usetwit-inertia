@@ -3,49 +3,51 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\Boms\CheckNameRequest;
 use App\Http\Requests\Admin\Boms\GetBomsRequest;
+use App\Http\Requests\Admin\Boms\NameExistsRequest;
 use App\Http\Requests\Admin\Boms\StoreRequest;
 use App\Http\Requests\Admin\Boms\UpdateRequest;
 use App\Models\Bom;
 use App\Services\FilterService;
 use App\Settings\GeneralSettings;
 use Diglactic\Breadcrumbs\Breadcrumbs;
+use Diglactic\Breadcrumbs\Exceptions\InvalidBreadcrumbException;
+use Diglactic\Breadcrumbs\Exceptions\UnnamedRouteException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class BomController extends Controller
 {
+    /**
+     * @throws InvalidBreadcrumbException
+     * @throws UnnamedRouteException
+     */
     public function edit(Bom $bom)
     {
-        $routes = [
-            'update' => route('admin.boms.update', $bom),
-            'check_name' => route('admin.boms.checkName'),
-        ];
+        $breadcrumbs = Breadcrumbs::generate('admin.boms.edit', $bom);
+        $heading = 'Edit Bom: '.$bom->name;
 
         $versions = $bom->bomVersions()
             ->orderByDesc('version')
-            ->pluck('version', 'id')
-            ->map(fn ($version) => "v{$version}");
+            ->pluck('version', 'id');
 
-        return view('admin.boms.edit', compact('bom', 'routes', 'versions'));
+        return Inertia::render('Admin/Boms/Edit', compact('bom', 'versions', 'heading', 'breadcrumbs'));
     }
 
-    public function update(Bom $bom, UpdateRequest $request): JsonResponse
+    public function update(Bom $bom, UpdateRequest $request): RedirectResponse
     {
         $bom->update($request->validated());
 
-        return response()->json([
-            'message' => 'BOM Updated Successfully',
-        ]);
+        return response()->redirectToRoute('admin.boms.edit', $bom)->with('success', 'BOM updated');
     }
 
-    public function checkName(CheckNameRequest $request): JsonResponse
+    public function nameExists(NameExistsRequest $request): JsonResponse
     {
         $exists = Bom::where('name', $request->input('name'))->exists();
 
-        return response()->json(['exists' => $exists]);
+        return response()->json(compact('exists'));
     }
 
     public function index(): Response
@@ -90,9 +92,11 @@ class BomController extends Controller
         $paginator = $query->paginate($perPage)->through(function ($bom) {
             return [
                 'id' => $bom->id,
+                'user_id' => $bom->user_id,
                 'name' => $bom->name,
                 'slug' => $bom->slug,
                 'active' => $bom->active,
+                'username' => $bom->user?->username,
                 'version' => $bom->latestVersion?->version,
                 'created_at' => $bom->created_at->toDateString(),
                 'updated_at' => $bom->updated_at->toDateString(),

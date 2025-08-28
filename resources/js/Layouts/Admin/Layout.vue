@@ -16,7 +16,6 @@ const title = computed(() => [...page.props.breadcrumbs].reverse().map(c => c.ti
 const heading = computed(() => page.props.heading);
 const logo = page.props.logo;
 const errors = computed(() => page.props.errors);
-
 const flash = computed(() => page.props.flash ?? {});
 
 watch(

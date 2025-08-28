@@ -6,7 +6,6 @@ use App\Exceptions\FilterServiceGetTypeInvalidException;
 use App\Models\Bom;
 use App\Models\User;
 use App\Services\FilterService;
-use App\Settings\GeneralSettings;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -17,7 +16,7 @@ class GetBomsRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->can('viewAny', Bom::class);
+        return $this->user()->can('view', Bom::class);
     }
 
     /**
@@ -31,7 +30,6 @@ class GetBomsRequest extends FormRequest
     {
         $filterRules = [
             'string' => [
-                'version',
                 'name',
             ],
             'date' => [
@@ -46,6 +44,6 @@ class GetBomsRequest extends FormRequest
             ],
         ];
 
-        return $service->makeValidationRules($filterRules);
+        return $service->makeValidationRules($filterRules, ['version', 'username']);
     }
 }

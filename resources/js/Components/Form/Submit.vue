@@ -4,6 +4,8 @@ import Button from '@/Components/Form/Button.vue';
 
 <template>
     <div class="p-2 sm:p-4 text-center">
-        <Button type="submit" v-bind="$attrs">Save</Button>
+        <Button type="submit" v-bind="$attrs">
+            <slot/>
+        </Button>
     </div>
 </template>

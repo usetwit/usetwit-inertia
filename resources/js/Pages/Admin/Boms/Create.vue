@@ -16,29 +16,18 @@ const page = usePage();
                 </template>
 
                 <template #input>
-                    <InputText name="name" id="name" :errors="page.props.errors" rounded show-errors/>
-                </template>
-
-                <template #help>
-                    Alphanumeric only
-                </template>
-            </Wrapper>
-
-            <Wrapper required>
-                <template #text>
-                    <label for="test">Test</label>
-                </template>
-
-                <template #input>
-                    <InputText name="test" id="test" :errors="page.props.errors" rounded show-errors/>
-                </template>
-
-                <template #help>
-                    Alphanumeric only
+                    <InputText name="name"
+                               id="name"
+                               maxlength="255"
+                               :errors="page.props.errors"
+                               required
+                               rounded
+                               show-errors
+                    />
                 </template>
             </Wrapper>
 
-            <Submit text="Submit"/>
+            <Submit>Create</Submit>
         </Form>
     </div>
 </template>
