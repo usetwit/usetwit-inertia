@@ -16,6 +16,10 @@ class Location extends Model
     use HasSlug;
     use SoftDeletes;
 
+    protected $fillable = [
+        'name',
+    ];
+
     protected static function booted(): void
     {
         parent::booted();
@@ -39,7 +43,7 @@ class Location extends Model
     public function defaultAddress(): MorphOne
     {
         return $this->morphOne(Address::class, 'addressable')
-                    ->where('is_default', true);
+            ->where('is_default', true);
     }
 
     public function calendar(): MorphOne
@@ -53,9 +57,9 @@ class Location extends Model
     public function getSlugOptions(): SlugOptions
     {
         return SlugOptions::create()
-                          ->generateSlugsFrom(['name'])
-                          ->saveSlugsTo('slug')
-                          ->slugsShouldBeNoLongerThan(50);
+            ->generateSlugsFrom(['name'])
+            ->saveSlugsTo('slug')
+            ->slugsShouldBeNoLongerThan(50);
     }
 
     /**

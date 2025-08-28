@@ -85,7 +85,11 @@ provide('tableInstance', tableInstance);
 <template>
     <div class="content-margin">
         <div v-if="permissions.includes('boms.create')" class="flex justify-end mb-4">
-            <Button icon="pi pi-sparkles">Create New BOM</Button>
+            <Link
+                class="rounded-md px-3 py-1.5 text-white bg-slate-800 border-slate-800 hover:bg-slate-700 hover:border-slate-700 dark:hover:bg-slate-100 dark:hover:border-slate-100 dark:bg-slate-200 dark:border-slate-200 dark:text-slate-900"
+            >
+                <i class="pi pi-sparkles mr-1"></i>Create New BOM
+            </Link>
         </div>
 
         <DataTable v-model:rows="rows"

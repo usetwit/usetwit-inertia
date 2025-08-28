@@ -50,7 +50,7 @@ class BomOperationsSeeder extends Seeder
 
         BomOperation::find(1)->successors()->sync([3]);
         BomOperation::find(2)->successors()->sync([3]);
-        BomOperation::find(3)->successors()->sync([4,5]);
+        BomOperation::find(3)->successors()->sync([4, 5]);
         BomOperation::find(4)->successors()->sync([7]);
         BomOperation::find(5)->successors()->sync([10]);
         BomOperation::find(6)->successors()->sync([8]);

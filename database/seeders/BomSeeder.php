@@ -13,7 +13,13 @@ class BomSeeder extends Seeder
      */
     public function run(): void
     {
-        BomVersion::factory()->for(Bom::factory())->create();
+        $bom = Bom::factory()->create();
+
+        foreach (range(1, 9) as $i) {
+            BomVersion::factory()->for($bom)->create([
+                'version' => $i,
+            ]);
+        }
 
         Bom::factory(25)->create([
             'user_id' => 1,

@@ -18,7 +18,6 @@ class DatabaseSeeder extends Seeder
             BomSeeder::class,
             StockItemSeeder::class,
             LocationsSeeder::class,
-            BomSeeder::class,
             OperationsSeeder::class,
             BomOperationsSeeder::class,
         ]);

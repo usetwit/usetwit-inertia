@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('bom_id')->constrained()->onDelete('cascade');
             $table->unsignedInteger('version');
+            $table->unique(['bom_id', 'version']);
             $table->text('comments')->nullable();
             $table->timestamps();
             $table->softDeletes();

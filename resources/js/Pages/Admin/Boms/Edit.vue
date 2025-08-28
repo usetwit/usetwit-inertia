@@ -32,7 +32,7 @@ const checkName = async () => {
 
 <template>
     <div class="content content-margin">
-        <Form :action="route('admin.boms.update', bom)" method="patch">
+        <Form :action="route('admin.boms.update', props.bom)" method="patch">
             <Wrapper required>
                 <template #text>
                     <label for="name">Name</label>

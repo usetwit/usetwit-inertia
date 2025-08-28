@@ -15,6 +15,10 @@ class Shift extends Model
     use HasSlug;
     use SoftDeletes;
 
+    protected $fillable = [
+        'name',
+    ];
+
     protected static function booted(): void
     {
         parent::booted();

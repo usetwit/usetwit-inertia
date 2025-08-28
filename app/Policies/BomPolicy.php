@@ -14,7 +14,7 @@ class BomPolicy
 
     public function edit(User $user, Bom $bom): bool
     {
-        return $user->can('boms.edit', $bom);
+        return $user->can('boms.edit') || $user->can('boms.edit.self') && $user->id === $bom->user_id;
     }
 
     public function create(User $user): bool
