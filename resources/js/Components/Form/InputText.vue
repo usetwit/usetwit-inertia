@@ -1,5 +1,5 @@
 <script setup>
-import {computed, useTemplateRef, watch} from 'vue';
+import {computed, useTemplateRef} from 'vue';
 
 const props = defineProps({
     disabled: {type: Boolean, default: false},
@@ -8,7 +8,7 @@ const props = defineProps({
     showErrors: {type: Boolean, default: false},
     type: {type: String, default: 'text'},
     errors: {type: Object, default: () => ({})},
-    name: {type: String, required: true},
+    name: {type: String, default: ''},
 });
 
 defineOptions({

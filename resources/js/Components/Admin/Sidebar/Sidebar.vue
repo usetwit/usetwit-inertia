@@ -1,16 +1,27 @@
 <script setup>
 import {useMenuStore} from '@/Stores/menuStore';
-import {ref} from 'vue';
+import {computed, watch} from 'vue';
 import {Link} from '@inertiajs/vue3';
+import {route} from 'ziggy-js';
 
 const props = defineProps({
     items: {
-        type: Object,
+        type: Array,
         required: true,
     },
 });
 
-const items = ref(props.items);
+const items = computed(() => props.items);
+
+const isActive = (l) => {
+    return [l.route, ...(l.matches ?? [])].some(n => route().current(n));
+};
+
+watch(() => props.items, () => {
+    for (const item of items.value) {
+        item.expanded = item.links?.some(l => isActive(l));
+    }
+}, {immediate: true});
 
 const toggleExpanded = (item) => {
     item.expanded = !item.expanded;
@@ -86,12 +97,12 @@ window.addEventListener('resize', checkScreenSize);
                             {{ link.label }}
                         </div>
                         <Link v-else
-                              :href="link.link"
+                              :href="route(link.route)"
                               :class="[
                                 'text-sm hover:text-slate-800 hover:border-l-gray-400 px-3 py-2 block border-l',
                                 {
-                                    'text-sky-800 border-sky-800': link.active,
-                                    'text-gray-600 border-gray-200': !link.active,
+                                    'text-sky-800 border-sky-800': isActive(link),
+                                    'text-gray-600 border-gray-200': !isActive(link),
                                 },
                             ]"
                         >

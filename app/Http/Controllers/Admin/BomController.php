@@ -83,7 +83,7 @@ class BomController extends Controller
         ];
 
         $query = BOM::query()
-            ->with('latestVersion');
+            ->withTrashed();
 
         $service->filterAndSort($query, $filters, $global, $visible, ['global'], $substitutions, $sorts);
 

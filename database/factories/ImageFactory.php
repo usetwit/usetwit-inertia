@@ -14,12 +14,12 @@ class ImageFactory extends Factory
 
     public function definition(): array
     {
-        $imageableTypes = Image::getValidImageables();
+        $imageableTypes = $Image->validImageables;
         $imageableType = Arr::random($imageableTypes);
         $extension = $this->faker->fileExtension();
 
         return [
-            'filename' => $this->faker->unique()->md5 . '.' . $extension,
+            'filename' => $this->faker->unique()->md5.'.'.$extension,
             'hash' => $this->faker->sha256,
             'extension' => $extension,
             'mime_type' => $this->faker->mimeType(),

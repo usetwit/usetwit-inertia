@@ -5,7 +5,7 @@ import ProfileDropdown from '@/Components/Admin/Navbar/ProfileDropdown.vue';
 const store = useMenuStore();
 
 const props = defineProps({
-    defaultProfileImage: {type: String, required: true},
+    profileImage: {type: String, required: true},
     user: {type: Object, required: true},
     logo: {type: String, required: true},
 });
@@ -34,7 +34,7 @@ const makeMenuVisible = () => {
             </a>
         </div>
         <div class="flex items-center right-buttons">
-            <ProfileDropdown :default-profile-image="defaultProfileImage"
+            <ProfileDropdown :profile-image="profileImage"
                              :user="user"
             />
         </div>

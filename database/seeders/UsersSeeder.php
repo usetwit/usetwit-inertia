@@ -4,9 +4,9 @@ namespace Database\Seeders;
 
 use App\Models\Address;
 use App\Models\User;
-use Intervention\Image\Laravel\Facades\Image as InterventionImage;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Intervention\Image\Laravel\Facades\Image as InterventionImage;
 use Spatie\Permission\Models\Role;
 
 class UsersSeeder extends Seeder
@@ -32,15 +32,14 @@ class UsersSeeder extends Seeder
         ])->assignRole($role['admin']);
 
         Address::factory()
-               ->count(3)
-               ->for($mike, 'addressable')
-               ->create();
+            ->count(3)
+            ->for($mike, 'addressable')
+            ->create();
 
         Address::factory()
-               ->for($mike, 'addressable')
-               ->state(['is_default' => true])
-               ->create();
-
+            ->for($mike, 'addressable')
+            ->state(['is_default' => true])
+            ->create();
 
         $filePath = storage_path('app/images/user/profile/1/b0f8b49f22c718e9924f5b1165111a67.png');
         $img = null;
@@ -58,7 +57,7 @@ class UsersSeeder extends Seeder
                 'size' => filesize($filePath),
                 'width' => $img->width(),
                 'height' => $img->height(),
-                'default_image' => true,
+                'is_default' => true,
                 'imageable_id' => $mike->id,
                 'imageable_type' => User::class,
             ];

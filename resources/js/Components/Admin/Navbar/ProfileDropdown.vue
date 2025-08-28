@@ -4,7 +4,7 @@ import useDropdown from '@/composables/useDropdown.js';
 import {Form} from '@inertiajs/vue3';
 
 const props = defineProps({
-    defaultProfileImage: {type: String, required: true},
+    profileImage: {type: String, required: true},
     user: {type: Object, required: true},
 });
 
@@ -42,7 +42,7 @@ const {
     >
         <span class="pl-4 hidden sm:block mr-2 whitespace-nowrap text-sm">{{ user.full_name }}</span>
         <span class="rounded-full bg-emerald-500">
-            <img :src="user.profile_image ? user.profile_image : defaultProfileImage"
+            <img :src="profileImage"
                  :alt="user.full_name"
                  class="object-cover w-10 h-10 rounded-full shadow-sm"
             />

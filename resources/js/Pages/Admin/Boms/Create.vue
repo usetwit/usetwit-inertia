@@ -9,7 +9,7 @@ const page = usePage();
 
 <template>
     <div class="content content-margin">
-        <Form :action="route('admin.boms.store')" method="post">
+        <Form :action="route('admin.boms.store')" method="post" :options="{ preserveScroll: true }">
             <Wrapper required>
                 <template #text>
                     <label for="name">Name</label>

@@ -22,7 +22,7 @@ return new class extends Migration
             $table->unsignedInteger('size');
             $table->unsignedSmallInteger('width');
             $table->unsignedSmallInteger('height');
-            $table->boolean('default_image')->default(false);
+            $table->boolean('is_default')->default(false);
             $table->morphs('imageable');
             $table->foreignId('user_id')->nullable()->constrained('users');
             $table->softDeletes();

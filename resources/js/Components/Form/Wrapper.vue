@@ -11,7 +11,7 @@ const props = defineProps({
     >
         <div class="min-w-0 text-slate-700 pt-1.5 break-words">
             <slot name="text"/>
-            <sup v-if="required" class="text-red-500">required</sup>
+            <sup v-if="required" class="text-red-500 ml-1">required</sup>
             <div v-if="$slots.help" class="text-xs sm:text-sm text-gray-500 break-words">
                 <slot name="help"/>
             </div>

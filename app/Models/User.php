@@ -44,9 +44,9 @@ class User extends Authenticatable implements Authorizable
     public function getSlugOptions(): SlugOptions
     {
         return SlugOptions::create()
-                          ->generateSlugsFrom(['first_name', 'middle_names', 'last_name'])
-                          ->saveSlugsTo('slug')
-                          ->slugsShouldBeNoLongerThan(50);
+            ->generateSlugsFrom(['first_name', 'middle_names', 'last_name'])
+            ->saveSlugsTo('slug')
+            ->slugsShouldBeNoLongerThan(50);
     }
 
     /**
@@ -57,9 +57,6 @@ class User extends Authenticatable implements Authorizable
         return 'slug';
     }
 
-    /**
-     * @return void
-     */
     protected static function booted(): void
     {
         parent::booted();
@@ -103,7 +100,7 @@ class User extends Authenticatable implements Authorizable
     public function defaultAddress(): MorphOne
     {
         return $this->morphOne(Address::class, 'addressable')
-                    ->where('is_default', true);
+            ->where('is_default', true);
     }
 
     public function images(): MorphMany
@@ -114,7 +111,7 @@ class User extends Authenticatable implements Authorizable
     public function profileImages(): MorphMany
     {
         return $this->morphMany(Image::class, 'imageable')
-                    ->whereType('user_profile');
+            ->whereType('user_profile');
     }
 
     public function uploadedImages(): HasMany

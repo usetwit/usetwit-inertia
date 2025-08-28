@@ -16,12 +16,16 @@ class Image extends Model
     protected $guarded = [];
 
     public $casts = [
-        'default_image' => 'boolean',
+        'is_default' => 'boolean',
     ];
 
-    protected array $validImageables = [
+    public array $validImageables = [
         User::class,
-    ];
+    ] {
+        get {
+            return $this->validImageables;
+        }
+    }
 
     public function imageable(): MorphTo
     {
@@ -33,16 +37,11 @@ class Image extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function getValidImageables(): array
-    {
-        return $this->validImageables;
-    }
-
     /**
      * Scope a query to only include popular users.
      */
     public function scopeDefault(Builder $query): void
     {
-        $query->where('default_image', true);
+        $query->where('is_default', true);
     }
 }
