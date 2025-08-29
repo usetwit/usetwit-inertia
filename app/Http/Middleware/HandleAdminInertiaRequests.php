@@ -91,7 +91,7 @@ class HandleAdminInertiaRequests extends Middleware
 
         return array_merge(parent::share($request), [
             'appName' => config('app.name'),
-            'user' => $user,
+            'user' => $user->only(['id', 'name', 'username', 'full_name', 'slug']),
             'flash' => [
                 'success' => fn () => $request->session()->get('success'),
                 'error' => fn () => $request->session()->get('error'),

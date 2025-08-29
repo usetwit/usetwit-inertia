@@ -132,6 +132,7 @@ Route::prefix('admin')
                 Route::post('store', 'store')->name('store')->can('boms.create');
                 Route::post('name-exists', 'nameExists')->name('name-exists')->can('view', Bom::class);
                 Route::post('get-boms', 'getBoms')->name('get-boms')->can('view', Bom::class);
+                Route::post('get-versions', 'getVersions')->name('get-versions')->can('view', Bom::class);
             });
 
             Route::prefix('bom-versions')

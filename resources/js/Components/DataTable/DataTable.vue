@@ -1,5 +1,5 @@
 <script setup>
-import {inject, nextTick, onBeforeUnmount, onMounted, provide, ref, useTemplateRef, watch} from 'vue';
+import {computed, inject, nextTick, onBeforeUnmount, onMounted, provide, ref, useTemplateRef, watch} from 'vue';
 import HeaderCell from '@/components/DataTable/HeaderCell.vue';
 import Cell from '@/components/DataTable/Cell.vue';
 import Button from '@/components/Form/Button.vue';
@@ -7,12 +7,15 @@ import Paginator from '@/components/DataTable/Paginator.vue';
 import InputText from '@/components/Form/InputText.vue';
 import InputGroup from '@/components/Form/InputGroup.vue';
 import InputGroupAddon from '@/components/Form/InputGroupAddon.vue';
+import {usePage} from '@inertiajs/vue3';
 
 const props = defineProps({
     loading: {type: Boolean, default: false},
-    paginationSettings: {type: Object, required: true},
-    dateSettings: {type: Object},
 });
+
+const page = usePage();
+const paginationSettings = computed(() => page.props.paginationSettings);
+const dateSettings = computed(() => page.props.dateSettings);
 
 const columnSet = ref(new Set());
 const columns = ref([]);
@@ -47,7 +50,7 @@ provide('deregisterColumn', column => {
     columnSet.value.delete(column);
 });
 
-provide('dateSettings', props.dateSettings);
+provide('dateSettings', dateSettings);
 
 watch(columnSet, (newValue) => {
     columns.value = Array.from(newValue).sort((a, b) => {

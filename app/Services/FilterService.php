@@ -351,7 +351,7 @@ class FilterService
         ];
     }
 
-    public function makeVisibleRules(array $filterRules, array $unfilterable): array
+    public function makeVisibleRules(array $filterRules, array $unfilterable = []): array
     {
         return [
             'visible' => 'array',

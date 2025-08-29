@@ -7,6 +7,7 @@ import Submit from '@/Components/Form/Submit.vue';
 import {route} from 'ziggy-js';
 import {Form, usePage} from '@inertiajs/vue3';
 import {cloneDeep} from 'lodash';
+import VersionsDataTable from '@/Components/Admin/Boms/VersionsDataTable.vue';
 
 const props = defineProps({
     bom: {type: Object, required: true},
@@ -49,10 +50,12 @@ const checkName = async () => {
                                v-model="bom.name"
                                @input="checkName"
                     />
-                    <p v-if="!exists && bom.name !== props.bom.name" class="text-green-600 text-xs mt-1">
+                    <p v-if="!exists && bom.name.toUpperCase() !== props.bom.name.toUpperCase()"
+                       class="text-green-600 text-xs mt-1">
                         <i class="pi pi-check mr-1"></i>Name available
                     </p>
-                    <p v-else-if="exists && bom.name !== props.bom.name" class="input-error-msg">
+                    <p v-else-if="exists && bom.name.toUpperCase() !== props.bom.name.toUpperCase()"
+                       class="input-error-msg">
                         <i class="pi pi-times mr-1"></i>Name already in use
                     </p>
                 </template>
@@ -60,6 +63,9 @@ const checkName = async () => {
             <Submit>Update</Submit>
         </Form>
     </div>
+
+    <h2 class="text-2xl content-margin text-shadow-slate-700 mt-8 mb-4">BOM Versions</h2>
+    <VersionsDataTable/>
 </template>
 
 <style scoped>

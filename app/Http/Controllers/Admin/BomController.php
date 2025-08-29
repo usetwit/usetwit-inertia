@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Boms\GetBomsRequest;
+use App\Http\Requests\Admin\Boms\GetVersionsRequest;
 use App\Http\Requests\Admin\Boms\NameExistsRequest;
 use App\Http\Requests\Admin\Boms\StoreRequest;
 use App\Http\Requests\Admin\Boms\UpdateRequest;
 use App\Models\Bom;
+use App\Models\BomVersion;
 use App\Services\FilterService;
 use App\Settings\GeneralSettings;
 use Diglactic\Breadcrumbs\Breadcrumbs;
@@ -29,11 +31,7 @@ class BomController extends Controller
         $breadcrumbs = Breadcrumbs::generate('admin.boms.edit', $bom);
         $heading = 'Edit Bom: '.$bom->name;
 
-        $versions = $bom->bomVersions()
-            ->orderByDesc('version')
-            ->pluck('version', 'id');
-
-        return Inertia::render('Admin/Boms/Edit', compact('bom', 'versions', 'heading', 'breadcrumbs'));
+        return Inertia::render('Admin/Boms/Edit', compact('bom', 'heading', 'breadcrumbs'));
     }
 
     public function update(Bom $bom, UpdateRequest $request): RedirectResponse
@@ -74,9 +72,9 @@ class BomController extends Controller
     public function getBoms(GetBomsRequest $request, FilterService $service, GeneralSettings $settings): JsonResponse
     {
         $perPage = $request->integer('per_page', $settings->per_page_default);
-        $filters = $request->input('filters', []);
-        $sorts = $request->input('sort', []);
-        $visible = $request->input('visible', []);
+        $filters = $request->array('filters');
+        $sorts = $request->array('sort');
+        $visible = $request->array('visible');
 
         $substitutions = ['id' => 'boms.id'];
         $global = [
@@ -100,6 +98,36 @@ class BomController extends Controller
                 'version' => $bom->latestVersion?->version,
                 'created_at' => $bom->created_at->toDateString(),
                 'updated_at' => $bom->updated_at->toDateString(),
+            ];
+        });
+
+        return response()->json([
+            'boms' => $paginator->items(),
+            'total' => $paginator->total(),
+        ]);
+    }
+
+    public function getVersions(GetVersionsRequest $request, FilterService $service, GeneralSettings $settings): JsonResponse
+    {
+        $perPage = $request->integer('per_page', $settings->per_page_default);
+        $filters = $request->array('filters');
+        $sorts = $request->array('sort');
+        $visible = $request->array('visible');
+
+        $global = [
+            'version',
+        ];
+
+        $query = BomVersion::query();
+
+        $service->filterAndSort($query, $filters, $global, $visible, ['global'], sorts: $sorts);
+
+        $paginator = $query->paginate($perPage)->through(function ($version) {
+            return [
+                'id' => $version->id,
+                'version' => $version->version,
+                'created_at' => $version->created_at->toDateString(),
+                'updated_at' => $version->updated_at->toDateString(),
             ];
         });
 
