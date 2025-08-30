@@ -39,7 +39,7 @@ export const applyFilterRegex = (string, global, self = []) => {
     string = String(string);
     global = String(global);
 
-    string = htmlspecialchars(String(string));
+    string = htmlspecialchars(string);
     const regexParts = [];
 
     if (global !== '') {
