@@ -9,7 +9,9 @@ export default function useTable(defaultData, fetchFn, storageInstance) {
         return activeData.value.columns.find(col => col.field === field) || null;
     };
 
-    const r = (field, string) => applyFilterRegex(string, getSearchGlobalValue(), getSearchValues(field));
+    const r = (field, string) => {
+        return applyFilterRegex(string, getSearchGlobalValue(), getSearchValues(field));
+    };
 
     const getSearchGlobalValue = () => {
         return activeData.value.filters?.global?.constraints[0]?.value || null;

@@ -4,6 +4,7 @@ use App\Http\Middleware\HandleAdminInertiaRequests;
 use App\Models\Bom;
 use App\Models\BomVersion;
 use App\Models\Location;
+use App\Models\Shift;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
@@ -144,40 +145,66 @@ Route::prefix('admin')
                     Route::patch('bom-version/{bomVersion}', 'update')->name('update');
                 });
 
+            /* Shifts */
+            Route::prefix('shifts')
+                ->name('shifts.')
+                ->controller('ShiftController')
+                ->group(function () {
+                    Route::get('', 'index')
+                        ->name('index');
+
+                    Route::get('create', 'create')
+                        ->name('create');
+
+                    Route::post('get-items', 'getItems')
+                        ->name('get-items');
+
+                    Route::get('{shift}/edit', 'edit')
+                        ->name('edit');
+
+                    Route::patch('{shift}', 'update')
+                        ->name('update');
+
+                    Route::post('name-exists', 'nameExists')
+                        ->name('name-exists')
+                        ->can('view', Shift::class);
+
+                });
+
             /* Calendars */
             Route::prefix('calendars')
                 ->name('calendars.')
-                ->middleware('permission:calendars.update')
-                ->controller('CalendarsController')
-                ->group(function () {
-                    Route::get('', 'index')->name('index');
-                    Route::get('create', 'create')->name('create');
-                    Route::get('{calendar}/edit', 'edit')->name('edit');
-                    Route::patch('{calendar}', 'update')->name('update');
-
-                    /* Calendar Shifts */
-                    Route::prefix('calendar-shifts')
-                        ->name('calendar-shifts.')
-                        ->controller('CalendarShiftsController')
-                        ->group(function () {
-                            Route::patch('{calendar}', 'update')->name('update');
-                            Route::post('{calendar}', 'getCalendarShifts')->name('get-calendar-shifts');
-                            Route::get('{calendar}/edit', 'edit')->name('edit');
-                        });
-                });
+                ->middleware('permission:calendars.edit')
+                ->namespace('Calendars')
+                ->group(function () {});
 
             /* Locations */
-            Route::prefix('locations')->name('locations.')->controller('LocationsController')->group(function () {
-                Route::get('', 'index')->name('index')->can('viewAny', Location::class);
-                Route::get('create', 'create')->name('create')->can('create', Location::class);
-                Route::patch('{location}', 'update')->name('update')->can('edit', 'location');
-                Route::post('', 'getLocations')->name('get-locations')->can('viewAny', Location::class);
-                Route::get('{location}/edit', 'edit')->name('edit')->can('edit', 'location');
-                Route::delete('{location}', 'destroy')->name('destroy')->can('delete', 'location');
-                Route::patch('{location}/restore', 'restore')
-                    ->name('restore')
-                    ->withTrashed()
-                    ->can('restore', 'location');
-            });
+            Route::prefix('locations')
+                ->name('locations.')
+                ->controller('LocationsController')
+                ->group(function () {
+                    Route::get('', 'index')
+                        ->name('index')
+                        ->can('viewAny', Location::class);
+
+                    Route::get('create', 'create')
+                        ->name('create')
+                        ->can('create', Location::class);
+
+                    Route::patch('{location}', 'update')
+                        ->name('update')
+                        ->can('edit', 'location');
+
+                    Route::post('', 'getLocations')
+                        ->name('get-locations')
+                        ->can('viewAny', Location::class);
+
+                    Route::get('{location}/edit', 'edit')->name('edit')->can('edit', 'location');
+                    Route::delete('{location}', 'destroy')->name('destroy')->can('delete', 'location');
+                    Route::patch('{location}/restore', 'restore')
+                        ->name('restore')
+                        ->withTrashed()
+                        ->can('restore', 'location');
+                });
         });
     });

@@ -42,7 +42,7 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'boms.edit.self']);
 
         $methods = ['create', 'edit', 'view', 'delete', 'restore'];
-        $modules = ['users', 'roles', 'locations', 'calendars', 'sales-orders', 'invoices', 'boms', 'bom-versions'];
+        $modules = ['users', 'roles', 'locations', 'shifts', 'calendars', 'sales-orders', 'invoices', 'boms', 'bom-versions'];
 
         foreach ($modules as $module) {
             foreach ($methods as $method) {

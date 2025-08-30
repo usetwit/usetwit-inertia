@@ -22,12 +22,18 @@ Breadcrumbs::for('admin.sales-orders.create', function (BreadcrumbTrail $trail) 
     $trail->push('Create New Sales Order');
 });
 
-/* Calendars */
-Breadcrumbs::for('admin.calendars.index', function (BreadcrumbTrail $trail) {
+/* Shifts */
+Breadcrumbs::for('admin.shifts.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.home');
-    $trail->push('Calendars', route('admin.calendars.index'));
+    $trail->push('All Shifts', route('admin.shifts.index'));
 });
 
+Breadcrumbs::for('admin.shifts.edit', function (BreadcrumbTrail $trail, $shift) {
+    $trail->parent('admin.home');
+    $trail->push('Edit Shift: '.$shift->name, route('admin.shifts.edit', $shift));
+});
+
+/* Calendars */
 Breadcrumbs::for('admin.calendars.show', function (BreadcrumbTrail $trail, $calendar) {
     $trail->parent('admin.calendars.index');
     $trail->push($calendar->name);

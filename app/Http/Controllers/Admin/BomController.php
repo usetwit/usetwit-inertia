@@ -76,7 +76,7 @@ class BomController extends Controller
         $sorts = $request->array('sort');
         $visible = $request->array('visible');
 
-        $substitutions = ['id' => 'boms.id'];
+        $substitutions = [];
         $global = [
             'id',
             'name',
@@ -87,22 +87,22 @@ class BomController extends Controller
 
         $service->filterAndSort($query, $filters, $global, $visible, ['global'], $substitutions, $sorts);
 
-        $paginator = $query->paginate($perPage)->through(function ($bom) {
+        $paginator = $query->paginate($perPage)->through(function ($item) {
             return [
-                'id' => $bom->id,
-                'user_id' => $bom->user_id,
-                'name' => $bom->name,
-                'slug' => $bom->slug,
-                'active' => $bom->active,
-                'username' => $bom->user?->username,
-                'version' => $bom->latestVersion?->version,
-                'created_at' => $bom->created_at->toDateString(),
-                'updated_at' => $bom->updated_at->toDateString(),
+                'id' => $item->id,
+                'user_id' => $item->user_id,
+                'name' => $item->name,
+                'slug' => $item->slug,
+                'active' => $item->active,
+                'username' => $item->user?->username,
+                'version' => $item->latestVersion?->version,
+                'created_at' => $item->created_at->toDateString(),
+                'updated_at' => $item->updated_at->toDateString(),
             ];
         });
 
         return response()->json([
-            'boms' => $paginator->items(),
+            'items' => $paginator->items(),
             'total' => $paginator->total(),
         ]);
     }
@@ -122,17 +122,17 @@ class BomController extends Controller
 
         $service->filterAndSort($query, $filters, $global, $visible, ['global'], sorts: $sorts);
 
-        $paginator = $query->paginate($perPage)->through(function ($version) {
+        $paginator = $query->paginate($perPage)->through(function ($item) {
             return [
-                'id' => $version->id,
-                'version' => $version->version,
-                'created_at' => $version->created_at->toDateString(),
-                'updated_at' => $version->updated_at->toDateString(),
+                'id' => $item->id,
+                'version' => $item->version,
+                'created_at' => $item->created_at->toDateString(),
+                'updated_at' => $item->updated_at->toDateString(),
             ];
         });
 
         return response()->json([
-            'boms' => $paginator->items(),
+            'items' => $paginator->items(),
             'total' => $paginator->total(),
         ]);
     }

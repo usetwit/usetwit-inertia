@@ -7,21 +7,20 @@ import Submit from '@/Components/Form/Submit.vue';
 import {route} from 'ziggy-js';
 import {Form, usePage} from '@inertiajs/vue3';
 import {cloneDeep} from 'lodash';
-import VersionsDataTable from '@/Components/Admin/Boms/VersionsDataTable.vue';
 
 const props = defineProps({
-    bom: {type: Object, required: true},
+    shift: {type: Object, required: true},
 });
 
 const page = usePage();
 const exists = ref(false);
-const bom = ref(cloneDeep(props.bom));
+const shift = ref(cloneDeep(props.shift));
 
 const nameExists = async () => {
-    if (bom.value.name) {
+    if (shift.value.name) {
         const {data, getResponse} = useAxios(
-            route('admin.boms.name-exists'),
-            {name: bom.value.name},
+            route('admin.shifts.name-exists'),
+            {name: shift.value.name},
             'post',
         );
 
@@ -33,7 +32,7 @@ const nameExists = async () => {
 
 <template>
     <div class="content content-margin">
-        <Form :action="route('admin.boms.update', props.bom)" method="patch" #default="{processing}">
+        <Form :action="route('admin.shifts.update', shift)" method="patch" #default="{processing}">
             <Wrapper required>
                 <template #text>
                     <label for="name">Name</label>
@@ -47,14 +46,14 @@ const nameExists = async () => {
                                required
                                rounded
                                show-errors
-                               v-model="bom.name"
+                               v-model="shift.name"
                                @input="nameExists"
                     />
-                    <p v-if="!exists && bom.name.toUpperCase() !== props.bom.name.toUpperCase()"
-                       class="input-success-msg">
+                    <p v-if="!exists && shift.name.toUpperCase() !== props.shift.name.toUpperCase()"
+                       class="text-green-600 text-xs mt-1">
                         <i class="pi pi-check mr-1"></i>Name available
                     </p>
-                    <p v-else-if="exists && bom.name.toUpperCase() !== props.bom.name.toUpperCase()"
+                    <p v-else-if="exists && shift.name.toUpperCase() !== props.shift.name.toUpperCase()"
                        class="input-error-msg">
                         <i class="pi pi-times mr-1"></i>Name already in use
                     </p>
@@ -63,10 +62,5 @@ const nameExists = async () => {
 
             <Submit :loading="processing">Update</Submit>
         </Form>
-    </div>
-
-    <h2 class="text-2xl content-margin font-bold text-slate-700 mb-2 mt-8">BOM Versions</h2>
-    <div class="content content-margin py-4">
-        <VersionsDataTable/>
     </div>
 </template>

@@ -1,5 +1,5 @@
 <script setup>
-import Select from '../Form/Select.vue';
+import Select from '@/Components/Form/Select.vue';
 
 const props = defineProps({
     type: {type: String, required: true},

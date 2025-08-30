@@ -1,8 +1,8 @@
 <script setup>
 import {computed, provide, ref} from 'vue';
 import useAxios from '@/composables/useAxios.js';
-import DataTable from '@/components/DataTable/DataTable.vue';
-import Column from '@/components/DataTable/Column.vue';
+import DataTable from '@/Components/DataTable/DataTable.vue';
+import Column from '@/Components/DataTable/Column.vue';
 import useTable from '@/composables/useTable.js';
 import {formatDate} from '@/helpers.js';
 import useStorage from '@/composables/useStorage.js';
@@ -21,7 +21,6 @@ const loading = ref(false);
 const defaultData = {
     filters: {
         global: {constraints: [{value: null, mode: 'contains'}]},
-        id: {operator: 'or', constraints: [{value: null, mode: 'contains'}]},
         name: {operator: 'or', constraints: [{value: null, mode: 'contains'}]},
         created_at: {operator: 'or', constraints: [{value: null, mode: 'date_equals'}]},
         updated_at: {operator: 'or', constraints: [{value: null, mode: 'date_equals'}]},
@@ -29,13 +28,10 @@ const defaultData = {
     },
     filtered: [],
     columns: [
-        {field: 'id', label: 'ID', visible: true, order: 1},
         {field: 'name', label: 'Name', visible: true, order: 2},
-        {field: 'version', label: 'Version', visible: true, order: 3},
         {field: 'created_at', label: 'Created Date', visible: true, order: 4},
         {field: 'updated_at', label: 'Updated Date', visible: true, order: 5},
         {field: 'active', label: 'Active', visible: true, order: 6},
-        {field: 'username', label: 'Username', visible: true, order: 7},
     ],
     sort: [{field: 'name', order: 'asc'}],
     pagination: {
@@ -45,13 +41,13 @@ const defaultData = {
     },
 };
 
-const storageInstance = useStorage('boms-index', defaultData);
+const storageInstance = useStorage('shifts-index', defaultData);
 const {activeData} = storageInstance;
 
 const fetchItems = async () => {
     loading.value = true;
 
-    const {data, errors, getResponse} = useAxios(route('admin.boms.get-boms'), {
+    const {data, errors, getResponse} = useAxios(route('admin.shifts.get-items'), {
         filters: activeData.value.filters,
         page: activeData.value.pagination.page,
         per_page: activeData.value.pagination.per_page,
@@ -80,10 +76,10 @@ provide('tableInstance', tableInstance);
 
 <template>
     <div class="content-margin">
-        <div v-if="permissions.includes('boms.create')" class="flex justify-end mb-4">
+        <div v-if="permissions.includes('shifts.create')" class="flex justify-end mb-4">
             <Link class="create"
             >
-                <i class="pi pi-sparkles mr-1"></i>Create New BOM
+                <i class="pi pi-sparkles mr-1"></i>Create New Shift
             </Link>
         </div>
 
@@ -94,32 +90,18 @@ provide('tableInstance', tableInstance);
 
             <Column sticky class="w-16" options>
                 <template #body="{ row }">
-                    <Link
-                        v-if="permissions.includes('boms.edit') || (permissions.includes('boms.edit.self') && row.user_id === user.id)"
-                        :href="route('admin.boms.edit', row)"
-                        class="edit"
-                        title="Edit"
+                    <Link v-if="permissions.includes('shifts.edit')"
+                          :href="route('admin.shifts.edit', row)"
+                          class="edit"
+                          title="Edit"
                     >
                         <i class="pi pi-pen-to-square"></i>
                     </Link>
                 </template>
             </Column>
-            <Column :column="getColumn('id')" v-if="isVisible('id')" sortable type="string">
-                <template #body="{ row }">
-                    <span v-html="r('id', row.id)"></span>
-                </template>
-            </Column>
             <Column :column="getColumn('name')" v-if="isVisible('name')" sortable type="string">
                 <template #body="{ row }">
                     <span v-html="r('name', row.name)"></span>
-                </template>
-            </Column>
-            <Column :column="getColumn('version')" v-if="isVisible('version')" class="text-center">
-                <template #body="{ row }">
-                    <Link :href="route('admin.bom-versions.edit', row)" title="Edit" v-if="row.version">v{{
-                            row.version
-                        }}
-                    </Link>
                 </template>
             </Column>
             <Column :column="getColumn('created_at')" v-if="isVisible('created_at')" sortable type="date">
@@ -132,13 +114,9 @@ provide('tableInstance', tableInstance);
                     {{ formatDate(row.updated_at, dateSettings.format, dateSettings.separator) }}
                 </template>
             </Column>
-            <Column :column="getColumn('active')"
-                    v-if="isVisible('active')"
-                    sortable
-                    type="active"
+            <Column :column="getColumn('active')" v-if="isVisible('active')" sortable type="active"
                     class="text-center">
             </Column>
-            <Column :column="getColumn('username')" v-if="isVisible('username')"/>
         </DataTable>
     </div>
 </template>

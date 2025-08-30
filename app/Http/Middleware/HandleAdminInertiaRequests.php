@@ -52,6 +52,34 @@ class HandleAdminInertiaRequests extends Middleware
                 ],
             ],
             [
+                'label' => 'Calendars',
+                'icon' => 'pi pi-calendar',
+                'links' => [
+                    [
+                        'type' => 'link',
+                        'label' => 'All Shifts',
+                        'route' => 'admin.shifts.index',
+                        'params' => [
+                            'type' => 'shift',
+                        ],
+                        'matches' => [
+                            'admin.shifts.edit',
+                        ],
+                    ],
+                    [
+                        'type' => 'link',
+                        'label' => 'All Opening Hours',
+                        'route' => 'admin.locations.index',
+                        'params' => [
+                            'type' => 'location',
+                        ],
+                        'matches' => [
+                            'admin.locations.edit',
+                        ],
+                    ],
+                ],
+            ],
+            [
                 'label' => 'BOMs',
                 'icon' => 'pi pi-sitemap',
                 'links' => [
@@ -91,7 +119,7 @@ class HandleAdminInertiaRequests extends Middleware
 
         return array_merge(parent::share($request), [
             'appName' => config('app.name'),
-            'user' => $user->only(['id', 'name', 'username', 'full_name', 'slug']),
+            'user' => $user?->only(['id', 'name', 'username', 'full_name', 'slug']),
             'flash' => [
                 'success' => fn () => $request->session()->get('success'),
                 'error' => fn () => $request->session()->get('error'),

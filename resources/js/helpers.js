@@ -39,10 +39,11 @@ export const applyFilterRegex = (string, global, self = []) => {
     string = String(string);
     global = String(global);
 
+    string = htmlspecialchars(String(string));
     const regexParts = [];
 
     if (global !== '') {
-        regexParts.push(escapeRegex(global));
+        regexParts.push(escapeRegex(htmlspecialchars(global)));
     }
 
     self.forEach(value => {
@@ -51,8 +52,9 @@ export const applyFilterRegex = (string, global, self = []) => {
         }
 
         value = String(value);
+
         if (value !== '') {
-            regexParts.push(escapeRegex(value));
+            regexParts.push(escapeRegex(htmlspecialchars(value)));
         }
     });
 
@@ -64,6 +66,15 @@ export const applyFilterRegex = (string, global, self = []) => {
 
     return string.replace(new RegExp(regexParts.join('|'), 'gi'), '<span class="regex-result">$&</span>');
 };
+
+function htmlspecialchars(str) {
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+}
 
 const escapeRegex = (str) => str.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
 

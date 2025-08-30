@@ -97,7 +97,7 @@ window.addEventListener('resize', checkScreenSize);
                             {{ link.label }}
                         </div>
                         <Link v-else
-                              :href="route(link.route)"
+                              :href="route(link.route, link.params)"
                               :class="[
                                 'text-sm hover:text-slate-800 hover:border-l-gray-400 px-3 py-2 block border-l',
                                 {

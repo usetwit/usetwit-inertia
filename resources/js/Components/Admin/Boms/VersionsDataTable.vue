@@ -38,7 +38,7 @@ const defaultData = {
     },
 };
 
-const storageInstance = useStorage('boms-index', defaultData);
+const storageInstance = useStorage('bom-versions-index', defaultData);
 const {activeData} = storageInstance;
 
 const fetchBoms = async () => {
@@ -90,7 +90,7 @@ provide('tableInstance', tableInstance);
                     </Link>
                 </template>
             </Column>
-            <Column :column="getColumn('version')" v-if="isVisible('version')" class="text-center" type="number">
+            <Column :column="getColumn('version')" v-if="isVisible('version')" type="string">
                 <template #body="{ row }">
                     <RegexLink :href="route('admin.bom-versions.edit', row)"
                                title="Edit"

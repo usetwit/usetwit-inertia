@@ -123,8 +123,29 @@ input[type="radio"]:disabled {
     }
 }
 
-.input-error-msg {
-    @apply text-xs text-red-600 mt-1;
+a {
+    &.create {
+        @apply rounded-md px-3 py-1.5 text-white bg-slate-800 border-slate-800
+        hover:bg-slate-700 hover:border-slate-700
+        dark:bg-slate-200 dark:border-slate-200 dark:text-slate-900
+        dark:hover:bg-slate-100 dark:hover:border-slate-100;
+    }
+
+    &.edit {
+        @apply inline-flex rounded-sm p-1.5 text-white bg-amber-500;
+    }
+}
+
+
+a.create {
+    @apply rounded-md px-3 py-1.5 text-white bg-slate-800 border-slate-800
+    hover:bg-slate-700 hover:border-slate-700
+    dark:bg-slate-200 dark:border-slate-200 dark:text-slate-900
+    dark:hover:bg-slate-100 dark:hover:border-slate-100;
+}
+
+a.edit {
+    @apply bg-amber-500 p-1.5 rounded-sm text-white inline-flex;
 }
 
 .content-margin {
