@@ -184,7 +184,7 @@ Route::prefix('admin')
                         ->name('update')
                         ->can('edit', 'calendar');
 
-                    Route::post('{calendar}', 'getShifts')
+                    Route::post('{calendar}/get-shifts', 'getShifts')
                         ->name('get-shifts')
                         ->can('edit', 'calendar');
                 });

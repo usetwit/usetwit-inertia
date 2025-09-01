@@ -121,7 +121,7 @@ const save = async () => {
     await getResponse();
 
     if (status.value === 200) {
-        toast.success(data.value);
+        toast.success(data.value.success);
     }
 
     loading.value = false;
@@ -137,7 +137,7 @@ const getShifts = async () => {
     await getResponse();
 
     if (status.value === 200) {
-        return data.value;
+        return data.value.shifts;
     }
 
     return [];
@@ -155,8 +155,8 @@ const getDates = async () => {
     loading.value = true;
 
     let dateArray = [];
-    let currentDate = DateTime.utc(year.value, 1, 1);   // Jan 1
-    const endDate = DateTime.utc(year.value, 12, 31);  // Dec 31
+    let currentDate = DateTime.utc(year.value, 1, 1);
+    const endDate = DateTime.utc(year.value, 12, 31);
     const calendarShifts = await getShifts();
 
     while (currentDate <= endDate) {
@@ -166,9 +166,9 @@ const getDates = async () => {
             id: id,
             timestamp: currentDate.toMillis(),
             year: currentDate.year,
-            month: currentDate.month - 1,  // JS month index (0–11)
+            month: currentDate.month - 1,
             day: currentDate.day,
-            dayOfWeek: currentDate.weekday % 7, // Luxon: 1=Mon…7=Sun
+            dayOfWeek: currentDate.weekday % 7,
             active: false,
             lastClicked: 0,
             shift_date: id,
