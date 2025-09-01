@@ -80,9 +80,8 @@ provide('tableInstance', tableInstance);
 
 <template>
     <div class="content-margin">
-        <div v-if="permissions.includes('boms.create')" class="flex justify-end mb-4">
-            <Link class="create"
-            >
+        <div v-if="permissions.includes('boms.create')" class="top-links">
+            <Link class="create-link">
                 <i class="pi pi-sparkles mr-1"></i>Create New BOM
             </Link>
         </div>
@@ -97,7 +96,7 @@ provide('tableInstance', tableInstance);
                     <Link
                         v-if="permissions.includes('boms.edit') || (permissions.includes('boms.edit.self') && row.user_id === user.id)"
                         :href="route('admin.boms.edit', row)"
-                        class="edit"
+                        class="record-edit"
                         title="Edit"
                     >
                         <i class="pi pi-pen-to-square"></i>

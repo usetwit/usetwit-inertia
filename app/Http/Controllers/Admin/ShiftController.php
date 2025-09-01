@@ -89,6 +89,10 @@ class ShiftController extends Controller
         $breadcrumbs = Breadcrumbs::generate('admin.shifts.edit', $shift);
         $heading = 'Edit Shift: '.$shift->name;
 
+        $shift->load('calendar');
+
+        //        dd($shift->calendar->id);
+
         return Inertia::render('Admin/Shifts/Edit', compact('shift', 'breadcrumbs', 'heading'));
     }
 

@@ -48,11 +48,6 @@ Route::prefix('admin')
                     Route::patch('', 'update')->name('update');
                 });
 
-            //    /* Roles and Permissions */
-            //    Route::prefix('roles')->name('roles.')->middleware('permission:roles.update')->controller('RolesController')->group(function () {
-            //        Route::get('{role}/edit', 'edit')->name('edit');
-            //    });
-
             /* Addresses */
             Route::prefix('addresses')->name('addresses.')->controller('AddressesController')->group(function () {
                 Route::post('user/{user}/create', 'userCreate')->name('user.create')->can('createAddress', 'user');
@@ -151,19 +146,24 @@ Route::prefix('admin')
                 ->controller('ShiftController')
                 ->group(function () {
                     Route::get('', 'index')
-                        ->name('index');
+                        ->name('index')
+                        ->can('view', Shift::class);
 
                     Route::get('create', 'create')
-                        ->name('create');
+                        ->name('create')
+                        ->can('create', Shift::class);
 
                     Route::post('get-items', 'getItems')
-                        ->name('get-items');
+                        ->name('get-items')
+                        ->can('view', Shift::class);
 
                     Route::get('{shift}/edit', 'edit')
-                        ->name('edit');
+                        ->name('edit')
+                        ->can('edit', 'shift');
 
                     Route::patch('{shift}', 'update')
-                        ->name('update');
+                        ->name('update')
+                        ->can('edit', 'shift');
 
                     Route::post('name-exists', 'nameExists')
                         ->name('name-exists')
@@ -171,12 +171,15 @@ Route::prefix('admin')
 
                 });
 
-            /* Calendars */
+            /* Calendar */
             Route::prefix('calendars')
                 ->name('calendars.')
-                ->middleware('permission:calendars.edit')
-                ->namespace('Calendars')
-                ->group(function () {});
+                ->controller('CalendarController')
+                ->group(function () {
+                    Route::get('{calendar}/edit', 'edit')
+                        ->name('edit')
+                        ->can('edit', 'calendar');
+                });
 
             /* Locations */
             Route::prefix('locations')

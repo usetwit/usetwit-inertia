@@ -33,7 +33,7 @@ Breadcrumbs::for('admin.shifts.edit', function (BreadcrumbTrail $trail, $shift) 
     $trail->push('Edit Shift: '.$shift->name, route('admin.shifts.edit', $shift));
 });
 
-/* Calendars */
+/* Calendar */
 Breadcrumbs::for('admin.calendars.show', function (BreadcrumbTrail $trail, $calendar) {
     $trail->parent('admin.calendars.index');
     $trail->push($calendar->name);

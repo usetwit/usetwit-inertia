@@ -123,15 +123,24 @@ input[type="radio"]:disabled {
     }
 }
 
+div.top-links {
+    @apply flex justify-end mb-4;
+}
+
 a {
-    &.create {
+    &.create-link {
         @apply rounded-md px-3 py-1.5 text-white bg-slate-800 border-slate-800
         hover:bg-slate-700 hover:border-slate-700
         dark:bg-slate-200 dark:border-slate-200 dark:text-slate-900
         dark:hover:bg-slate-100 dark:hover:border-slate-100;
     }
 
-    &.edit {
+    &.edit-link {
+        @apply rounded-md px-3 py-1.5 text-white bg-yellow-500 border-yellow-500
+        hover:bg-yellow-400 hover:border-yellow-400;
+    }
+
+    &.record-edit {
         @apply inline-flex rounded-sm p-1.5 text-white bg-amber-500;
     }
 }

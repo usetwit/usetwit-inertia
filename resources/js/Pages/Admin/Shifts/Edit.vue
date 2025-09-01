@@ -1,11 +1,11 @@
 <script setup>
 import useAxios from '@/composables/useAxios.js';
-import {ref} from 'vue';
+import {computed, ref} from 'vue';
 import InputText from '@/Components/Form/InputText.vue';
 import Wrapper from '@/Components/Form/Wrapper.vue';
 import Submit from '@/Components/Form/Submit.vue';
 import {route} from 'ziggy-js';
-import {Form, usePage} from '@inertiajs/vue3';
+import {Form, Link, usePage} from '@inertiajs/vue3';
 import {cloneDeep} from 'lodash';
 
 const props = defineProps({
@@ -13,6 +13,7 @@ const props = defineProps({
 });
 
 const page = usePage();
+const permissions = computed(() => page.props.permissions);
 const exists = ref(false);
 const shift = ref(cloneDeep(props.shift));
 
@@ -32,6 +33,12 @@ const nameExists = async () => {
 
 <template>
     <div class="content content-margin">
+        <div v-if="permissions.includes('calendars.edit')" class="top-links content-margin mt-4">
+            <Link class="edit-link" :href="route('admin.calendars.edit', shift.calendar.id)">
+                <i class="pi pi-pen-to-square mr-1"></i>Edit Shift Calendar
+            </Link>
+        </div>
+
         <Form :action="route('admin.shifts.update', shift)" method="patch" #default="{processing}">
             <Wrapper required>
                 <template #text>
