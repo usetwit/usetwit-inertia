@@ -1,11 +1,13 @@
 <script setup>
 import {computed, ref} from 'vue';
-import Month from '@/Components/Admin/Calendar/Shifts/Month.vue';
-import ShiftInput from '@/Components/Admin/Calendar/Shifts/ShiftInput.vue';
+import Month from '@/Components/Admin/Calendar/Month.vue';
+import ShiftInput from '@/Components/Admin/Calendar/ShiftInput.vue';
 import useAxios from '@/composables/useAxios.js';
-import Select from '@/Components/Admin/Calendar/Shifts/Select.vue';
+import Select from '@/Components/Admin/Calendar/Select.vue';
 import Button from '@/components/Form/Button.vue';
 import {toast} from 'vue3-toastify';
+import {route} from 'ziggy-js';
+import {DateTime} from 'luxon';
 
 const dateList = ref([]);
 const year = ref(new Date().getFullYear());
@@ -15,17 +17,13 @@ const lastDateClicked = ref(null);
 const loading = ref(false);
 
 const props = defineProps({
-    route: {
-        required: true,
-        type: String,
-    },
-    routeUpdate: {
-        required: true,
-        type: String,
-    },
-    calendarList: {
-        required: true,
+    shifts: {
         type: Array,
+        required: true,
+    },
+    calendar: {
+        type: Object,
+        required: true,
     },
 });
 
@@ -113,12 +111,12 @@ const save = async () => {
     loading.value = true;
 
     const {status, data, getResponse} = useAxios(
-        props.routeUpdate,
+        route('admin.calendar-shifts.update', props.calendar),
         {
             dates: dateList.value,
             year: year.value,
         },
-        'patch',
+        'put',
     );
     await getResponse();
 
@@ -129,9 +127,9 @@ const save = async () => {
     loading.value = false;
 };
 
-const getCalendarShifts = async () => {
+const getShifts = async () => {
     const {status, data, getResponse} = useAxios(
-        props.route,
+        route('admin.calendar-shifts.get-shifts', props.calendar),
         {
             year: year.value,
         },
@@ -157,19 +155,20 @@ const getDates = async () => {
     loading.value = true;
 
     let dateArray = [];
-    let currentDate = new Date(Date.UTC(year.value, 0, 1));
-    const endDate = new Date(Date.UTC(year.value, 11, 31));
-    const calendarShifts = await getCalendarShifts();
+    let currentDate = DateTime.utc(year.value, 1, 1);   // Jan 1
+    const endDate = DateTime.utc(year.value, 12, 31);  // Dec 31
+    const calendarShifts = await getShifts();
 
     while (currentDate <= endDate) {
-        let id = currentDate.toISOString().split('T')[0];
+        let id = currentDate.toISODate();
+
         let dateProperties = {
             id: id,
-            timestamp: currentDate.getTime(),
-            year: currentDate.getUTCFullYear(),
-            month: currentDate.getUTCMonth(),
-            day: currentDate.getUTCDate(),
-            dayOfWeek: currentDate.getUTCDay(),
+            timestamp: currentDate.toMillis(),
+            year: currentDate.year,
+            month: currentDate.month - 1,  // JS month index (0–11)
+            day: currentDate.day,
+            dayOfWeek: currentDate.weekday % 7, // Luxon: 1=Mon…7=Sun
             active: false,
             lastClicked: 0,
             shift_date: id,
@@ -191,13 +190,12 @@ const getDates = async () => {
                 'shift4_end': '',
                 'nwd': false,
             };
-
             merged = {...temp, ...dateProperties};
         }
 
         dateArray.push({...merged, ...{isModified: getIsModified(merged)}});
 
-        currentDate = currentDate.addDays(1);
+        currentDate = currentDate.plus({days: 1});
     }
 
     dateList.value = dateArray;
@@ -227,7 +225,7 @@ const activeList = computed(() => {
 <template>
     <div class="p-4">
 
-        <Select :calendar-list="props.calendarList"/>
+        <Select :calendar-list="props.shifts"/>
 
         <Button v-for="(day, key) in dayTexts"
                 @click="selectDays(key + 1 === 7 ? 0 : key + 1)"

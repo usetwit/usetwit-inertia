@@ -33,15 +33,15 @@ Breadcrumbs::for('admin.shifts.edit', function (BreadcrumbTrail $trail, $shift) 
     $trail->push('Edit Shift: '.$shift->name, route('admin.shifts.edit', $shift));
 });
 
-/* Calendar */
-Breadcrumbs::for('admin.calendars.show', function (BreadcrumbTrail $trail, $calendar) {
-    $trail->parent('admin.calendars.index');
-    $trail->push($calendar->name);
-});
+/* CalendarShifts */
+Breadcrumbs::for('admin.calendar-shifts.edit', function (BreadcrumbTrail $trail, $calendar) {
+    if ($calendar->calendar_type === Location::class) {
+        $trail->parent('admin.locations.index');
+    } else {
+        $trail->parent('admin.shifts.index');
+    }
 
-Breadcrumbs::for('admin.calendars.calendar-shifts.edit', function (BreadcrumbTrail $trail, $calendar) {
-    $trail->parent('admin.calendars.index');
-    $trail->push($calendar->calendarable->name);
+    $trail->push('Edit Calendar: '.$calendar->calendarable->name);
 });
 
 /* Users */

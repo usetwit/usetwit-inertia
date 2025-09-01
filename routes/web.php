@@ -171,13 +171,21 @@ Route::prefix('admin')
 
                 });
 
-            /* Calendar */
-            Route::prefix('calendars')
-                ->name('calendars.')
-                ->controller('CalendarController')
+            /* CalendarShifts Shifts */
+            Route::prefix('calendar-shifts')
+                ->name('calendar-shifts.')
+                ->controller('CalendarShiftsController')
                 ->group(function () {
                     Route::get('{calendar}/edit', 'edit')
                         ->name('edit')
+                        ->can('edit', 'calendar');
+
+                    Route::put('{calendar}', 'update')
+                        ->name('update')
+                        ->can('edit', 'calendar');
+
+                    Route::post('{calendar}', 'getShifts')
+                        ->name('get-shifts')
                         ->can('edit', 'calendar');
                 });
 

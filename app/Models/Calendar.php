@@ -11,7 +11,7 @@ class Calendar extends Model
 {
     use HasFactory;
 
-    public function calendarShifts(): HasMany
+    public function shifts(): HasMany
     {
         return $this->hasMany(CalendarShift::class);
     }

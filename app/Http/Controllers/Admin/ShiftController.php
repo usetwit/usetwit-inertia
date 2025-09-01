@@ -90,8 +90,7 @@ class ShiftController extends Controller
         $heading = 'Edit Shift: '.$shift->name;
 
         $shift->load('calendar');
-
-        //        dd($shift->calendar->id);
+        $shifts = $shift->calendar->shifts;
 
         return Inertia::render('Admin/Shifts/Edit', compact('shift', 'breadcrumbs', 'heading'));
     }

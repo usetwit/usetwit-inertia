@@ -1,44 +1,34 @@
 <script setup>
-import {computed} from 'vue'
+import {computed} from 'vue';
+import {DateTime} from 'luxon';
 
 const props = defineProps({
-    dates: {
-        required: true,
-        type: Array,
-    },
-    monthNumber: {
-        required: true,
-        type: Number,
-    },
-    dayTexts: {
-        required: true,
-        type: Array,
-    }
-})
+    dates: {required: true, type: Array},
+    monthNumber: {required: true, type: Number},
+    dayTexts: {required: true, type: Array},
+});
 
-const monthTexts = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+const monthTexts = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 function getMonday(date) {
-    const day = date.getUTCDay();
-    const diff = date.getUTCDate() - day + (day === 0 ? -6 : 1);
-
-    return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), diff));
+    // date is a Luxon DateTime
+    const weekday = date.weekday; // 1=Mon … 7=Sun
+    return date.minus({days: weekday - 1});
 }
 
 const preDates = computed(() => {
     let date = props.dates[0];
-    let firstDayOfMonth = new Date(Date.UTC(date.year, date.month, 1));
+    let firstDayOfMonth = DateTime.utc(date.year, date.month + 1, 1); // month+1 since Luxon months are 1–12
     let monday = getMonday(firstDayOfMonth);
     let dates = [];
 
     while (monday < firstDayOfMonth) {
-        dates.push(monday.getUTCDate());
-        monday = monday.addDays(1);
+        dates.push(monday.day);
+        monday = monday.plus({days: 1});
     }
 
     return dates;
 });
-
 </script>
 
 <template>

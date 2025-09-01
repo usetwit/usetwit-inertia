@@ -52,7 +52,7 @@ class HandleAdminInertiaRequests extends Middleware
                 ],
             ],
             [
-                'label' => 'Calendar',
+                'label' => 'CalendarShifts',
                 'icon' => 'pi pi-calendar',
                 'links' => [
                     [

@@ -34,7 +34,7 @@ const nameExists = async () => {
 <template>
     <div class="content content-margin">
         <div v-if="permissions.includes('calendars.edit')" class="top-links content-margin mt-4">
-            <Link class="edit-link" :href="route('admin.calendars.edit', shift.calendar.id)">
+            <Link class="edit-link" :href="route('admin.calendar-shifts.edit', shift.calendar.id)">
                 <i class="pi pi-pen-to-square mr-1"></i>Edit Shift Calendar
             </Link>
         </div>
