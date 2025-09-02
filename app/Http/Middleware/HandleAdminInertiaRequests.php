@@ -32,6 +32,21 @@ class HandleAdminInertiaRequests extends Middleware
     private function sidebarItems(): array
     {
         return [
+
+            [
+                'label' => 'Users',
+                'icon' => 'pi pi-users',
+                'links' => [
+                    [
+                        'type' => 'link',
+                        'label' => 'All Users',
+                        'route' => 'admin.users.index',
+                        'matches' => [
+                            'admin.users.edit',
+                        ],
+                    ],
+                ],
+            ],
             [
                 'label' => 'Sales Orders',
                 'icon' => 'pi pi-dollar',
@@ -52,7 +67,7 @@ class HandleAdminInertiaRequests extends Middleware
                 ],
             ],
             [
-                'label' => 'CalendarShifts',
+                'label' => 'Calendars',
                 'icon' => 'pi pi-calendar',
                 'links' => [
                     [

@@ -76,7 +76,6 @@ class BomController extends Controller
         $sorts = $request->array('sort');
         $visible = $request->array('visible');
 
-        $substitutions = [];
         $global = [
             'id',
             'name',
@@ -85,7 +84,7 @@ class BomController extends Controller
         $query = BOM::query()
             ->withTrashed();
 
-        $service->filterAndSort($query, $filters, $global, $visible, ['global'], $substitutions, $sorts);
+        $service->filterAndSort($query, $filters, $global, $visible, ['global'], sorts: $sorts);
 
         $paginator = $query->paginate($perPage)->through(function ($item) {
             return [

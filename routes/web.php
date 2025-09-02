@@ -66,46 +66,19 @@ Route::prefix('admin')
             });
 
             /* Users */
-            Route::prefix('users')->name('users.')->controller('UsersController')->group(function () {
-                Route::get('', 'index')->name('index')->can('viewAny', User::class);
-                Route::delete('{user}', 'destroy')->name('destroy')->can('delete', 'user');
-                Route::patch('{user}/restore', 'restore')->name('restore')->withTrashed()->can('restore', 'user');
-                Route::get('create', 'create')->name('create')->can('create', User::class);
-                Route::get('{user}/edit', 'edit')->name('edit')->withTrashed()->can('edit', 'user');
+            Route::prefix('users')->name('users.')->controller('UserController')->group(function () {
+                Route::get('', 'index')
+                    ->name('index')
+                    ->can('view', User::class);
 
-                /* Users Update */
-                Route::prefix('update')->name('update.')->controller('UsersUpdateController')->group(function () {
-                    Route::patch('employee-id/{user}', 'updateEmployeeId')
-                        ->name('employee-id')
-                        ->withTrashed()
-                        ->can('updateEmployeeId', 'user');
-                    Route::patch('username/{user}', 'updateUsername')
-                        ->name('username')
-                        ->withTrashed()
-                        ->can('updateUsername', 'user');
-                    Route::patch('company-profile/{user}', 'updateCompanyProfile')
-                        ->name('company-profile')
-                        ->withTrashed()
-                        ->can('updateCompanyProfile', 'user');
-                    Route::patch('personal-profile/{user}', 'updatePersonalProfile')
-                        ->name('personal-profile')
-                        ->withTrashed()
-                        ->can('updatePersonalProfile', 'user');
-                    Route::patch('password/{user}', 'updatePassword')->name('password')->withTrashed();
-                    Route::patch('protected-info/{user}', 'updateProtectedInfo')
-                        ->name('protected-info')
-                        ->withTrashed()
-                        ->can('updateProtectedInfo', User::class);
-                });
+                Route::get('create', 'create')
+                    ->name('create')
+                    ->can('create', User::class);
 
-                Route::post('check-username', 'checkUsername')
-                    ->name('check-username')
-                    ->can('updateUsername', User::class);
-                Route::post('check-employee-id', 'checkEmployeeId')
-                    ->name('check-employee-id')
-                    ->can('updateEmployeeId', User::class);
-                Route::post('', 'store')->name('store')->can('create', User::class);
-                Route::post('get-users', 'getUsers')->name('get-users')->can('viewAny', User::class);
+                Route::post('get-users', 'getUsers')
+                    ->name('get-users')
+                    ->can('view', User::class);
+
             });
 
             /* Sales Orders */

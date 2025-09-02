@@ -7,7 +7,6 @@ import useTable from '@/composables/useTable.js';
 import {formatDate} from '@/helpers.js';
 import useStorage from '@/composables/useStorage.js';
 import {Link, usePage} from '@inertiajs/vue3';
-import RegexLink from '@/Components/DataTable/RegexLink.vue';
 import {route} from 'ziggy-js';
 
 const page = usePage();
@@ -81,7 +80,7 @@ provide('tableInstance', tableInstance);
 <template>
     <div class="content-margin">
         <div v-if="permissions.includes('boms.create')" class="top-links">
-            <Link class="create-link">
+            <Link class="create-link" :href="route('admin.boms.create')">
                 <i class="pi pi-sparkles mr-1"></i>Create New BOM
             </Link>
         </div>

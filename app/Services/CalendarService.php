@@ -3,17 +3,14 @@
 namespace App\Services;
 
 use App\Exceptions\EndLessThanOrEqualToStartException;
-use App\Exceptions\KeyMismatchException;
 use App\Exceptions\HoursUsedException;
 use App\Exceptions\IncorrectTimeFormatException;
+use App\Exceptions\KeyMismatchException;
 use App\Exceptions\StartLessThanOrEqualToPrevEndException;
 
 class CalendarService
 {
     /**
-     * @param array $times
-     *
-     * @return array
      * @throws EndLessThanOrEqualToStartException
      * @throws HoursUsedException
      * @throws KeyMismatchException
@@ -30,15 +27,15 @@ class CalendarService
         $keysToTest = collect(array_keys($times))->sort()->values();
         $allowedKeys = collect($allowedKeys)->sort()->values();
 
-        if (!$keysToTest->diff($allowedKeys)->isEmpty() || !$allowedKeys->diff($keysToTest)->isEmpty()) {
-            throw new KeyMismatchException();
+        if (! $keysToTest->diff($allowedKeys)->isEmpty() || ! $allowedKeys->diff($keysToTest)->isEmpty()) {
+            throw new KeyMismatchException;
         }
 
         /*
          * Validate all the times
          */
         foreach ($times as $time) {
-            if (!preg_match('#^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$#', $time) && $time !== null) {
+            if (! preg_match('#^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$#', $time) && $time !== null) {
                 throw new IncorrectTimeFormatException($time);
             }
         }
@@ -51,8 +48,8 @@ class CalendarService
             return str_ends_with('end', $key);
         }, ARRAY_FILTER_USE_KEY);
 
-        if (count(array_filter($ends, fn($value) => $value === '00:00')) > 1) {
-            throw new HoursUsedException();
+        if (count(array_filter($ends, fn ($value) => $value === '00:00')) > 1) {
+            throw new HoursUsedException;
         }
 
         /*
@@ -74,13 +71,13 @@ class CalendarService
                 && $times["shift{$i}_end"] !== null
                 && $times["shift{$i}_start"] !== null
             ) {
-                throw new EndLessThanOrEqualToStartException("shift{$i}_end: " . $timestamps["shift{$i}_end"] . ", shift{$i}_start: " . $timestamps["shift{$i}_start"]);
+                throw new EndLessThanOrEqualToStartException("shift{$i}_end: ".$timestamps["shift{$i}_end"].", shift{$i}_start: ".$timestamps["shift{$i}_start"]);
             }
 
             if ($i > 1) {
                 $prev = $i - 1;
                 if ($timestamps["shift{$i}_start"] <= $timestamps["shift{$prev}_end"] && $times["shift{$i}_start"] !== null) {
-                    throw new StartLessThanOrEqualToPrevEndException();
+                    throw new StartLessThanOrEqualToPrevEndException;
                 }
             }
 

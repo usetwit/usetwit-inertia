@@ -8,27 +8,11 @@ use App\Models\User;
 class UserPolicy
 {
     /**
-     * Determine whether the user can view any models.
-     */
-    public function viewAny(User $user): bool
-    {
-        return $user->can('users.view') || $user->can('users.edit');
-    }
-
-    /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, User $model): bool
+    public function view(User $user): bool
     {
-        if ($user->can('users.view')) {
-            return true;
-        }
-
-        if ($user->can('users.view.self')) {
-            return $user->id === $model->id;
-        }
-
-        return false;
+        return $user->can('users.view');
     }
 
     /**

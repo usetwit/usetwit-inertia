@@ -1,1 +1,26 @@
 Change BOMs Index to .items/$items
+Change CalendarShifts Index to .items/$items
+CalendarShifts/GetShiftsRequest needs authorize()
+
+
+$result = DB::query()
+  ->withExpression('daily', fn($q) => $q->from('transactions')
+    ->selectRaw("item_id, DATE(`date`) d,
+                 SUM(CASE WHEN kind='receipt' THEN qty ELSE -qty END) net_qty")
+    ->groupBy('item_id', DB::raw('DATE(`date`)')))
+  ->withExpression('timeline', fn($q) => $q->from('items as i')
+    ->join('daily as d', 'd.item_id', '=', 'i.id')
+    ->selectRaw("i.id item_id, i.sku, i.name, i.on_hand, d.d,
+      SUM(d.net_qty) OVER (PARTITION BY d.item_id ORDER BY d.d
+      ROWS UNBOUNDED PRECEDING) + i.on_hand projected"))
+  ->withExpression('short', fn($q) => $q->from('timeline')
+    ->where('projected', '<', 0)
+    ->selectRaw('item_id, MIN(d) shortage_on')
+    ->groupBy('item_id'))
+  ->from('short as s')
+  ->join('timeline as t', fn($j) => $j->on('t.item_id','=','s.item_id')->on('t.d','=','s.shortage_on'))
+  ->join('items as i', 'i.id', '=', 's.item_id')
+  ->selectRaw('i.id, i.sku, i.name, s.shortage_on, t.projected projected_on_shortage, -t.projected as shortage_qty')
+  ->orderBy('s.shortage_on')
+  ->orderBy('i.sku')
+  ->paginate(50);
