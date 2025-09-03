@@ -54,11 +54,11 @@ Route::prefix('admin')
                 Route::patch('user/{user}/{address}', 'userUpdate')
                     ->name('user.update')
                     ->scopeBindings()
-                    ->can('editUserAddress', 'address');
+                    ->can('updateUserAddress', 'address');
                 Route::patch('user/{user}/make-default/{address}', 'userMakeDefault')
                     ->name('user.make-default')
                     ->scopeBindings()
-                    ->can('editUserAddress', 'address');
+                    ->can('updateUserAddress', 'address');
                 Route::delete('user/{user}/delete/{address}', 'userDestroy')
                     ->name('user.destroy')
                     ->scopeBindings()
@@ -66,20 +66,43 @@ Route::prefix('admin')
             });
 
             /* Users */
-            Route::prefix('users')->name('users.')->controller('UserController')->group(function () {
-                Route::get('', 'index')
-                    ->name('index')
-                    ->can('view', User::class);
+            Route::prefix('users')
+                ->name('users.')
+                ->controller('UserController')
+                ->group(function () {
+                    Route::get('', 'index')
+                        ->name('index')
+                        ->can('view', User::class);
 
-                Route::get('create', 'create')
-                    ->name('create')
-                    ->can('create', User::class);
+                    Route::get('create', 'create')
+                        ->name('create')
+                        ->can('create', User::class);
 
-                Route::post('get-users', 'getUsers')
-                    ->name('get-users')
-                    ->can('view', User::class);
+                    Route::post('get-users', 'getUsers')
+                        ->name('get-users')
+                        ->can('view', User::class);
 
-            });
+                    Route::get('{user}/edit', 'edit')
+                        ->name('edit')
+                        ->can('update', 'user');
+
+                    Route::post('username-exists', 'usernameExists')
+                        ->name('username-exists')
+                        ->can('view', User::class);
+
+                    Route::post('employee-id-exists', 'employeeIdExists')
+                        ->name('employee-id-exists')
+                        ->can('view', User::class);
+
+                    Route::prefix('update')->name('update.')->controller('UserUpdateController')->group(function () {
+
+                        Route::patch('personal-profile/{user}', 'updatePersonalProfile')
+                            ->name('personal-profile')
+                            ->withTrashed()
+                            ->can('updatePersonalProfile', 'user');
+                    });
+
+                });
 
             /* Sales Orders */
             Route::prefix('sales-orders')
@@ -95,13 +118,34 @@ Route::prefix('admin')
             /* Boms */
             Route::prefix('boms')->name('boms.')->controller('BomController')->group(function () {
                 Route::get('', 'index')->name('index')->can('view', Bom::class);
-                Route::get('{bom}/edit', 'edit')->name('edit')->can('edit', 'bom');
-                Route::patch('{bom}', 'update')->name('update')->can('edit', 'bom');
-                Route::get('create', 'create')->name('create')->can('boms.create');
-                Route::post('store', 'store')->name('store')->can('boms.create');
-                Route::post('name-exists', 'nameExists')->name('name-exists')->can('view', Bom::class);
-                Route::post('get-boms', 'getBoms')->name('get-boms')->can('view', Bom::class);
-                Route::post('get-versions', 'getVersions')->name('get-versions')->can('view', Bom::class);
+
+                Route::get('{bom}/edit', 'edit')
+                    ->name('edit')
+                    ->can('update', 'bom');
+
+                Route::patch('{bom}', 'update')
+                    ->name('update')
+                    ->can('update', 'bom');
+
+                Route::get('create', 'create')
+                    ->name('create')
+                    ->can('boms.create');
+
+                Route::post('store', 'store')
+                    ->name('store')
+                    ->can('boms.create');
+
+                Route::post('name-exists', 'nameExists')
+                    ->name('name-exists')
+                    ->can('view', Bom::class);
+
+                Route::post('get-boms', 'getBoms')
+                    ->name('get-boms')
+                    ->can('view', Bom::class);
+
+                Route::post('{bom}/get-versions', 'getVersions')
+                    ->name('get-versions')
+                    ->can('view', Bom::class);
             });
 
             Route::prefix('bom-versions')
@@ -132,11 +176,11 @@ Route::prefix('admin')
 
                     Route::get('{shift}/edit', 'edit')
                         ->name('edit')
-                        ->can('edit', 'shift');
+                        ->can('update', 'shift');
 
                     Route::patch('{shift}', 'update')
                         ->name('update')
-                        ->can('edit', 'shift');
+                        ->can('update', 'shift');
 
                     Route::post('name-exists', 'nameExists')
                         ->name('name-exists')
@@ -151,15 +195,15 @@ Route::prefix('admin')
                 ->group(function () {
                     Route::get('{calendar}/edit', 'edit')
                         ->name('edit')
-                        ->can('edit', 'calendar');
+                        ->can('update', 'calendar');
 
                     Route::put('{calendar}', 'update')
                         ->name('update')
-                        ->can('edit', 'calendar');
+                        ->can('update', 'calendar');
 
                     Route::post('{calendar}/get-shifts', 'getShifts')
                         ->name('get-shifts')
-                        ->can('edit', 'calendar');
+                        ->can('update', 'calendar');
                 });
 
             /* Locations */
@@ -177,13 +221,13 @@ Route::prefix('admin')
 
                     Route::patch('{location}', 'update')
                         ->name('update')
-                        ->can('edit', 'location');
+                        ->can('update', 'location');
 
                     Route::post('', 'getLocations')
                         ->name('get-locations')
                         ->can('viewAny', Location::class);
 
-                    Route::get('{location}/edit', 'edit')->name('edit')->can('edit', 'location');
+                    Route::get('{location}/edit', 'edit')->name('edit')->can('update', 'location');
                     Route::delete('{location}', 'destroy')->name('destroy')->can('delete', 'location');
                     Route::patch('{location}/restore', 'restore')
                         ->name('restore')

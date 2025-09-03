@@ -11,9 +11,9 @@ class ShiftPolicy
         return $user->can('shifts.view');
     }
 
-    public function edit(User $user): bool
+    public function update(User $user): bool
     {
-        return $user->can('shifts.edit');
+        return $user->can('shifts.update');
     }
 
     public function create(User $user): bool

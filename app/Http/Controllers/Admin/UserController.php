@@ -3,15 +3,20 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\Users\EmployeeIdExistsRequest;
 use App\Http\Requests\Admin\Users\GetUsersRequest;
+use App\Http\Requests\Admin\Users\UsernameExistsRequest;
 use App\Models\User;
 use App\Services\FilterService;
 use App\Settings\GeneralSettings;
 use Diglactic\Breadcrumbs\Breadcrumbs;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -123,9 +128,48 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(User $user)
+    public function edit(User $user, GeneralSettings $settings)
     {
-        //
+        $heading = 'Edit User: '.$user->full_name;
+        $breadcrumbs = Breadcrumbs::generate('admin.users.edit', $user);
+
+        $model = $user;
+        $countries = $settings->countriesArray();
+        $defaultCountry = $settings->default_country;
+
+        $user->load([
+            'addresses',
+            'profileImages',
+            'roles' => function (MorphToMany $query) {
+                $query->limit(1);
+            },
+        ]);
+
+        $roles = Role::get(['id', 'name']);
+
+        return Inertia::render('Admin/Users/Edit', compact('model', 'roles', 'countries', 'defaultCountry', 'heading', 'breadcrumbs'));
+    }
+
+    public function usernameExists(UsernameExistsRequest $request): JsonResponse
+    {
+        $username = $request->string('username');
+
+        if (! $username) {
+            return response()->json(['exists' => false]);
+        }
+
+        return response()->json(User::withTrashed()->where('username', $username)->get(['username']));
+    }
+
+    public function employeeIdExists(EmployeeIdExistsRequest $request): JsonResponse
+    {
+        $employee_id = $request->string('employee_id');
+
+        if (! $employee_id) {
+            return response()->json(['exists' => false]);
+        }
+
+        return response()->json(User::withTrashed()->where('employee_id', $employee_id)->get(['employee_id']));
     }
 
     /**

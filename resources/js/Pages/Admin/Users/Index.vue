@@ -62,7 +62,7 @@ const defaultData = {
 const storageInstance = useStorage('users-index', defaultData);
 const {activeData} = storageInstance;
 
-const fetchUsers = async () => {
+const fetchItems = async () => {
     loading.value = true;
 
     const {data, errors, getResponse} = useAxios(route('admin.users.get-users'), {
@@ -85,7 +85,7 @@ const fetchUsers = async () => {
     loading.value = false;
 };
 
-const tableInstance = useTable(defaultData, fetchUsers, storageInstance);
+const tableInstance = useTable(defaultData, fetchItems, storageInstance);
 
 const {getColumn, isVisible, r} = tableInstance;
 
@@ -107,8 +107,8 @@ provide('tableInstance', tableInstance);
             <Column sticky class="w-16" options>
                 <template #body="{ row }">
                     <Link
-                        v-if="permissions.includes('users.edit') || (permissions.includes('users.edit.self') && row.id === user.id)"
-                        :href="route('admin.boms.edit', row)"
+                        v-if="permissions.includes('users.update') || (permissions.includes('users.update.self') && row.id === user.id)"
+                        :href="route('admin.users.edit', row)"
                         class="record-edit"
                         title="Edit"
                     >

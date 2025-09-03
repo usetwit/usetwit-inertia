@@ -11,7 +11,7 @@ class LocationPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->can('locations.view') || $user->can('locations.edit');
+        return $user->can('locations.view') || $user->can('locations.update');
     }
 
     /**
@@ -31,11 +31,11 @@ class LocationPolicy
     }
 
     /**
-     * Determine whether the user can edit the model.
+     * Determine whether the user can update the model.
      */
-    public function edit(User $user): bool
+    public function update(User $user): bool
     {
-        return $user->can('locations.edit');
+        return $user->can('locations.update');
     }
 
     /**

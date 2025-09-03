@@ -12,9 +12,9 @@ class BomPolicy
         return $user->can('boms.view');
     }
 
-    public function edit(User $user, Bom $bom): bool
+    public function update(User $user, Bom $bom): bool
     {
-        return $user->can('boms.edit') || $user->can('boms.edit.self') && $user->id === $bom->user_id;
+        return $user->can('boms.update') || $user->can('boms.update.self') && $user->id === $bom->user_id;
     }
 
     public function create(User $user): bool

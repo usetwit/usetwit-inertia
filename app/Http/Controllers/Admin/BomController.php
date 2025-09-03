@@ -9,7 +9,6 @@ use App\Http\Requests\Admin\Boms\NameExistsRequest;
 use App\Http\Requests\Admin\Boms\StoreRequest;
 use App\Http\Requests\Admin\Boms\UpdateRequest;
 use App\Models\Bom;
-use App\Models\BomVersion;
 use App\Services\FilterService;
 use App\Settings\GeneralSettings;
 use Diglactic\Breadcrumbs\Breadcrumbs;
@@ -43,7 +42,13 @@ class BomController extends Controller
 
     public function nameExists(NameExistsRequest $request): JsonResponse
     {
-        $exists = Bom::where('name', $request->input('name'))->exists();
+        $name = $request->string('name');
+
+        if (! $name) {
+            return response()->json(['exists' => false]);
+        }
+
+        $exists = Bom::where('name', $name)->exists();
 
         return response()->json(compact('exists'));
     }
@@ -106,7 +111,7 @@ class BomController extends Controller
         ]);
     }
 
-    public function getVersions(GetVersionsRequest $request, FilterService $service, GeneralSettings $settings): JsonResponse
+    public function getVersions(Bom $bom, GetVersionsRequest $request, FilterService $service, GeneralSettings $settings): JsonResponse
     {
         $perPage = $request->integer('per_page', $settings->per_page_default);
         $filters = $request->array('filters');
@@ -117,7 +122,7 @@ class BomController extends Controller
             'version',
         ];
 
-        $query = BomVersion::query();
+        $query = $bom->bomVersions();
 
         $service->filterAndSort($query, $filters, $global, $visible, ['global'], sorts: $sorts);
 

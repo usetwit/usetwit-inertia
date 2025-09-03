@@ -6,9 +6,9 @@ use App\Models\User;
 
 class CalendarPolicy
 {
-    public function edit(User $user): bool
+    public function update(User $user): bool
     {
-        return $user->can('calendars.edit');
+        return $user->can('calendars.update');
     }
 
     public function view(User $user): bool

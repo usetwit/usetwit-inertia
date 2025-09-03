@@ -93,7 +93,7 @@ provide('tableInstance', tableInstance);
             <Column sticky class="w-16" options>
                 <template #body="{ row }">
                     <Link
-                        v-if="permissions.includes('boms.edit') || (permissions.includes('boms.edit.self') && row.user_id === user.id)"
+                        v-if="permissions.includes('boms.update') || (permissions.includes('boms.update.self') && row.user_id === user.id)"
                         :href="route('admin.boms.edit', row)"
                         class="record-edit"
                         title="Edit"

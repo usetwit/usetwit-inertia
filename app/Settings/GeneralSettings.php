@@ -85,7 +85,7 @@ class GeneralSettings extends Settings
     public function countriesArray()
     {
         return collect(Countries::getNames())
-            ->map(fn($name, $code) => [
+            ->map(fn ($name, $code) => [
                 'code' => $code,
                 'name' => $name,
             ])

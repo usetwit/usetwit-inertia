@@ -14,9 +14,11 @@ const page = usePage();
 const permissions = computed(() => page.props.permissions);
 const paginationSettings = computed(() => page.props.paginationSettings);
 const dateSettings = computed(() => page.props.dateSettings);
+const bom = computed(() => page.props.bom);
 
 const rows = ref([]);
 const loading = ref(false);
+
 const defaultData = {
     filters: {
         global: {constraints: [{value: null, mode: 'contains'}]},
@@ -41,10 +43,10 @@ const defaultData = {
 const storageInstance = useStorage('bom-versions-index', defaultData);
 const {activeData} = storageInstance;
 
-const fetchBoms = async () => {
+const fetchVersions = async () => {
     loading.value = true;
 
-    const {data, errors, getResponse} = useAxios(route('admin.boms.get-versions'), {
+    const {data, errors, getResponse} = useAxios(route('admin.boms.get-versions', bom.value.slug), {
         filters: activeData.value.filters,
         page: activeData.value.pagination.page,
         per_page: activeData.value.pagination.per_page,
@@ -55,7 +57,7 @@ const fetchBoms = async () => {
     await getResponse();
 
     if (!errors.value.raw) {
-        rows.value = data.value.boms;
+        rows.value = data.value.items;
         activeData.value.pagination.total = data.value.total;
     } else {
         rows.value = [];
@@ -64,7 +66,7 @@ const fetchBoms = async () => {
     loading.value = false;
 };
 
-const tableInstance = useTable(defaultData, fetchBoms, storageInstance);
+const tableInstance = useTable(defaultData, fetchVersions, storageInstance);
 
 const {getColumn, isVisible, r} = tableInstance;
 
@@ -81,7 +83,7 @@ provide('tableInstance', tableInstance);
             <Column sticky class="w-16" options>
                 <template #body="{ row }">
                     <Link
-                        v-if="permissions.includes('bom-versions.edit')"
+                        v-if="permissions.includes('bom-versions.update')"
                         :href="route('admin.bom-versions.edit', row)"
                         class="bg-amber-500 p-1.5 rounded-sm text-white inline-flex"
                         title="Edit"
