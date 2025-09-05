@@ -45,6 +45,6 @@ defineExpose({
            v-bind="$attrs"
     >
     <p v-if="hasError && showErrors" class="input-error-msg">
-        {{ props.errors[props.name] }}
+        {{ errors[name] }}
     </p>
 </template>

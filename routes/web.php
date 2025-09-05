@@ -49,21 +49,29 @@ Route::prefix('admin')
                 });
 
             /* Addresses */
-            Route::prefix('addresses')->name('addresses.')->controller('AddressesController')->group(function () {
-                Route::post('user/{user}/create', 'userCreate')->name('user.create')->can('createAddress', 'user');
-                Route::patch('user/{user}/{address}', 'userUpdate')
-                    ->name('user.update')
-                    ->scopeBindings()
-                    ->can('updateUserAddress', 'address');
-                Route::patch('user/{user}/make-default/{address}', 'userMakeDefault')
-                    ->name('user.make-default')
-                    ->scopeBindings()
-                    ->can('updateUserAddress', 'address');
-                Route::delete('user/{user}/delete/{address}', 'userDestroy')
-                    ->name('user.destroy')
-                    ->scopeBindings()
-                    ->can('deleteUserAddress', 'address');
-            });
+            Route::prefix('addresses')
+                ->name('addresses.')
+                ->controller('AddressController')
+                ->group(function () {
+                    Route::post('user/{user}/create', 'userCreate')
+                        ->name('user.create')
+                        ->can('createAddress', 'user');
+
+                    Route::patch('user/{user}/{address}', 'userUpdate')
+                        ->name('user.update')
+                        ->scopeBindings()
+                        ->can('updateUserAddress', 'address');
+
+                    Route::patch('user/{user}/make-default/{address}', 'userMakeDefault')
+                        ->name('user.make-default')
+                        ->scopeBindings()
+                        ->can('updateUserAddress', 'address');
+
+                    Route::delete('user/{user}/delete/{address}', 'userDestroy')
+                        ->name('user.destroy')
+                        ->scopeBindings()
+                        ->can('deleteUserAddress', 'address');
+                });
 
             /* Users */
             Route::prefix('users')
@@ -100,6 +108,11 @@ Route::prefix('admin')
                             ->name('personal-profile')
                             ->withTrashed()
                             ->can('updatePersonalProfile', 'user');
+
+                        Route::patch('company-profile/{user}', 'updateCompanyProfile')
+                            ->name('company-profile')
+                            ->withTrashed()
+                            ->can('updateCompanyProfile', 'user');
                     });
 
                 });

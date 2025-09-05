@@ -57,7 +57,7 @@ const nameExists = async () => {
                                @input="nameExists"
                     />
                     <p v-if="!exists && shift.name.toUpperCase() !== props.shift.name.toUpperCase()"
-                       class="text-green-600 text-xs mt-1">
+                       class="input-success-msg">
                         <i class="pi pi-check mr-1"></i>Name available
                     </p>
                     <p v-else-if="exists && shift.name.toUpperCase() !== props.shift.name.toUpperCase()"

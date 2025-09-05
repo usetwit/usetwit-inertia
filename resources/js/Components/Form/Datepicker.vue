@@ -1,21 +1,18 @@
 <script setup>
 import useDropdown from '@/composables/useDropdown';
 import useDates from '@/composables/useDates';
-import {onMounted, ref, useTemplateRef, watch} from 'vue';
+import {computed, onMounted, ref, useTemplateRef, watch} from 'vue';
 import InputGroup from '@/components/Form/InputGroup.vue';
 import InputText from '@/components/Form/InputText.vue';
 import DatepickerHeader from '@/components/Form/DatepickerHeader.vue';
 import {DateTime} from 'luxon';
+import {usePage} from '@inertiajs/vue3';
 
 const props = defineProps({
     disabled: {type: Boolean, default: false},
     required: {type: Boolean, default: false},
     dropdown: {type: Boolean, default: false},
     numberOfMonths: {type: Number, default: 1},
-    format: {type: String, required: true},
-    displayFormat: {type: String, required: true},
-    regex: {type: String, required: true},
-    separator: {type: String, required: true},
     containerClass: {type: [String, Object]},
     positionY: {type: String, default: 'bottom'},
     positionX: {type: String, default: 'center'},
@@ -26,6 +23,8 @@ defineOptions({
 });
 
 const model = defineModel();
+const page = usePage();
+const dateSettings = computed(() => page.props.dateSettings);
 
 let initialTextValue = '';
 let initialDate = DateTime.utc();
@@ -35,7 +34,7 @@ if (model.value) {
 
     if (test.isValid) {
         initialDate = test;
-        initialTextValue = initialDate.toFormat(props.format.replace(/-/g, props.separator));
+        initialTextValue = initialDate.toFormat(dateSettings.value.format.replace(/-/g, dateSettings.value.separator));
     }
 }
 
@@ -90,7 +89,7 @@ const selectYear = newYear => {
 const setDate = day => {
     const selectedDate = DateTime.utc(day.year, day.month, day.day);
 
-    inputModel.value = selectedDate.toFormat(props.format.replace(/-/g, props.separator));
+    inputModel.value = selectedDate.toFormat(dateSettings.value.format.replace(/-/g, dateSettings.value.separator));
     showDropdown.value = false;
 };
 
@@ -99,7 +98,7 @@ const isSelected = day => {
         return false;
     }
 
-    const parsedDate = DateTime.fromFormat(inputModel.value.replace(/[./]/g, '-'), props.format);
+    const parsedDate = DateTime.fromFormat(inputModel.value.replace(/[./]/g, '-'), dateSettings.value.format);
 
     return parsedDate.isValid && parsedDate.hasSame(day, 'day');
 };
@@ -107,7 +106,7 @@ const isSelected = day => {
 watch(inputModel, (newValue) => {
     const formattedValue = newValue.replace(/[./]/g, '-');
 
-    const parsedDate = DateTime.fromFormat(formattedValue, props.format.replace(/[./]/g, '-'));
+    const parsedDate = DateTime.fromFormat(formattedValue, dateSettings.value.format.replace(/[./]/g, '-'));
 
     if (parsedDate.isValid) {
         model.value = parsedDate.toFormat('yyyy-MM-dd');
@@ -125,17 +124,19 @@ watch(inputModel, (newValue) => {
 </script>
 
 <template>
+    <input type="hidden" :name="$attrs.name" :value="model ?? ''">
+
     <InputGroup :class="containerClass">
         <InputText ref="inputTextComponent"
+                   v-bind="{ ...$attrs, name: undefined }"
                    v-model="inputModel"
                    :disabled="disabled"
                    :aria-disabled="disabled"
                    :required="required"
                    :aria-required="required"
-                   :placeholder="displayFormat"
-                   :pattern="regex"
+                   :placeholder="dateSettings.display"
+                   :pattern="dateSettings.regex"
                    @focus="showDropdown = true"
-                   v-bind="$attrs"
         />
         <button v-if="dropdown"
                 class="inline-flex bg-gray-200 hover:bg-gray-100 text-gray-700 items-center align-middle px-2"

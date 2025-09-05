@@ -134,11 +134,24 @@ class UserController extends Controller
         $breadcrumbs = Breadcrumbs::generate('admin.users.edit', $user);
 
         $model = $user;
-        $countries = $settings->countriesArray();
+        $countries = $settings->countries();
         $defaultCountry = $settings->default_country;
 
-        $user->load([
-            'addresses',
+        $model->load([
+            'addresses' => function ($query) {
+                $query->select(
+                    'addressable_id',
+                    'addressable_type',
+                    'id',
+                    'address_line_1',
+                    'address_line_2',
+                    'address_line_3',
+                    'postcode',
+                    'is_default',
+                    'country_code',
+                    'country_name'
+                );
+            },
             'profileImages',
             'roles' => function (MorphToMany $query) {
                 $query->limit(1);

@@ -3,12 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Str;
 use Symfony\Component\Intl\Countries;
 
 class Address extends Model
@@ -52,27 +50,6 @@ class Address extends Model
 
         static::restoring(function ($model) {
             $model->update(['active' => 1]);
-        });
-    }
-
-    protected $appends = [
-        'routes',
-    ];
-
-    protected function routes(): Attribute
-    {
-        return Attribute::get(function () {
-            $resource = Str::snake(class_basename($this->addressable_type));
-            $params = [
-                $resource => $this->addressable,
-                'address' => $this,
-            ];
-
-            return [
-                'make_default' => route("admin.addresses.{$resource}.make-default", $params),
-                'delete' => route("admin.addresses.{$resource}.destroy", $params),
-                'update' => route("admin.addresses.{$resource}.update", $params),
-            ];
         });
     }
 

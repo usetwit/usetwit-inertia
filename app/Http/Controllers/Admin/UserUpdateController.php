@@ -10,24 +10,19 @@ use App\Http\Requests\Admin\Users\UpdatePersonalProfileRequest;
 use App\Http\Requests\Admin\Users\UpdateProtectedInfoRequest;
 use App\Http\Requests\Admin\Users\UpdateUsernameRequest;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Hash;
 
 class UserUpdateController extends Controller
 {
-    /**
-     * @return string
-     */
-    public function updatePassword(UpdatePasswordRequest $request, User $user)
+    public function updatePassword(UpdatePasswordRequest $request, User $user): RedirectResponse
     {
         $user->update(['password' => Hash::make($request->input('new_password'))]);
 
-        return 'Password updated successfully';
+        return redirect()->back();
     }
 
-    /**
-     * @return string
-     */
-    public function updatePersonalProfile(UpdatePersonalProfileRequest $request, User $user)
+    public function updatePersonalProfile(UpdatePersonalProfileRequest $request, User $user): RedirectResponse
     {
         $user->update($request->only([
             'first_name',
@@ -42,10 +37,7 @@ class UserUpdateController extends Controller
         return redirect()->back();
     }
 
-    /**
-     * @return string
-     */
-    public function updateCompanyProfile(UpdateCompanyProfileRequest $request, User $user)
+    public function updateCompanyProfile(UpdateCompanyProfileRequest $request, User $user): RedirectResponse
     {
         $user->update($request->only([
             'email',
@@ -54,13 +46,10 @@ class UserUpdateController extends Controller
             'company_mobile_number',
         ]));
 
-        return 'Company profile updated successfully';
+        return redirect()->back();
     }
 
-    /**
-     * @return string
-     */
-    public function updateProtectedInfo(UpdateProtectedInfoRequest $request, User $user)
+    public function updateProtectedInfo(UpdateProtectedInfoRequest $request, User $user): RedirectResponse
     {
         $user->update($request->only([
             'username',
@@ -71,26 +60,20 @@ class UserUpdateController extends Controller
 
         $user->syncRoles($request->input('role_id'));
 
-        return 'Protected info updated successfully';
+        return redirect()->back();
     }
 
-    /**
-     * @return string
-     */
-    public function updateUsername(UpdateUsernameRequest $request, User $user)
+    public function updateUsername(UpdateUsernameRequest $request, User $user): RedirectResponse
     {
         $user->update(['username' => $request->input('username')]);
 
-        return 'Username updated successfully';
+        return redirect()->back();
     }
 
-    /**
-     * @return string
-     */
-    public function updateEmployeeId(UpdateEmployeeIdRequest $request, User $user)
+    public function updateEmployeeId(UpdateEmployeeIdRequest $request, User $user): RedirectResponse
     {
         $user->update(['employee_id' => $request->input('employee_id')]);
 
-        return 'Employee ID updated successfully';
+        return redirect()->back();
     }
 }

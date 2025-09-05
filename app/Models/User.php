@@ -94,7 +94,9 @@ class User extends Authenticatable implements Authorizable
 
     public function addresses(): MorphMany
     {
-        return $this->morphMany(Address::class, 'addressable');
+        return $this->morphMany(Address::class, 'addressable')
+            ->orderByDesc('is_default')
+            ->orderByDesc('created_at');
     }
 
     public function defaultAddress(): MorphOne

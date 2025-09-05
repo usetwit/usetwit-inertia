@@ -2,6 +2,7 @@
 
 namespace App\Settings;
 
+use Illuminate\Support\Collection;
 use Spatie\LaravelSettings\Settings;
 use Symfony\Component\Intl\Countries;
 
@@ -82,13 +83,10 @@ class GeneralSettings extends Settings
         ];
     }
 
-    public function countriesArray()
+    public function countries(): Collection
     {
         return collect(Countries::getNames())
-            ->map(fn ($name, $code) => [
-                'code' => $code,
-                'name' => $name,
-            ])
+            ->map(fn ($name, $code) => compact('name', 'code'))
             ->values();
     }
 }

@@ -23,6 +23,14 @@ body > div[data-page] {
     min-height: 100%;
 }
 
+.input-error-msg {
+    @apply text-red-500 mt-1 text-sm;
+}
+
+.input-success-msg {
+    @apply text-green-500 mt-1 text-sm;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 /*
@@ -85,12 +93,6 @@ body > div[data-page] {
 
     .dropdown {
         @apply rounded-lg absolute bg-white shadow-sm border-gray-200 border flex flex-col overflow-y-auto p-1;
-    }
-}
-
-@layer components {
-    h3 {
-        @apply text-xl border-t border-slate-200 text-slate-700 p-4 bg-slate-200 uppercase;
     }
 }
 

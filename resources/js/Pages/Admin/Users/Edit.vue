@@ -12,10 +12,10 @@ import useAxios from '@/composables/useAxios.js';
 import {debounce, pick} from 'lodash';
 import {toast} from 'vue3-toastify';
 import Modal from '@/components/Modal.vue';
-import AddressList from '@/components/Addresses/List.vue';
 import {Form, router, usePage} from '@inertiajs/vue3';
 import {route} from 'ziggy-js';
 import Submit from '@/Components/Form/Submit.vue';
+import AddressList from '@/Components/Addresses/AddressList.vue';
 
 const page = usePage();
 const model = ref({
@@ -29,13 +29,13 @@ const permissions = computed(() => page.props.permissions);
 const countries = computed(() => page.props.countries);
 const defaultCountry = computed(() => page.props.defaultCountry);
 const roles = computed(() => page.props.roles);
+const dateSettings = computed(() => page.props.dateSettings);
 
 const usernameExists = ref(false);
 const employeeIdExists = ref(false);
 const loading = ref(false);
 const tabs = ref([]);
 const activeTab = ref(null);
-const errorFields = ref([]);
 const deleteModalIsVisible = ref(false);
 const deleteUserForm = useTemplateRef('deleteUserForm');
 
@@ -150,7 +150,15 @@ watch(() => user.value.username, (newValue) => {
 });
 
 const keepHash = (hash) => {
-    location.hash = hash;
+    const u = new URL(location.href);
+    u.hash = hash;
+    history.replaceState(null, '', u);
+
+    const t = tabs.value.find(t => t.key === hash);
+    if (t) {
+        activeTab.value = t;
+    }
+
     toast.success('User updated');
 };
 </script>
@@ -171,6 +179,7 @@ const keepHash = (hash) => {
             <Form :action="route('admin.users.update.personal-profile', model)"
                   method="patch"
                   @success="() => keepHash('personal_profile')"
+                  :options="{ preserveState: true, preserveScroll: true }"
             >
                 <Wrapper required>
                     <template #text>
@@ -180,11 +189,10 @@ const keepHash = (hash) => {
                     </template>
 
                     <template #input>
-                        <InputText class="rounded-md w-full sm:w-60"
+                        <InputText class="w-full sm:w-60"
                                    id="first_name"
                                    name="first_name"
                                    :errors="page.props.errors"
-                                   required
                                    rounded
                                    show-errors
                                    maxlength="85"
@@ -194,9 +202,256 @@ const keepHash = (hash) => {
                     </template>
                 </Wrapper>
 
+                <Wrapper>
+                    <template #text>
+                        <label for="middle_names">
+                            Middle Names
+                        </label>
+                    </template>
+
+                    <template #input>
+                        <InputText class="w-full sm:w-60"
+                                   id="middle_names"
+                                   name="middle_names"
+                                   :errors="page.props.errors"
+                                   rounded
+                                   show-errors
+                                   maxlength="85"
+                                   placeholder="Middle Names"
+                                   v-model="model.middle_names"
+                        />
+                    </template>
+                </Wrapper>
+
+                <Wrapper>
+                    <template #text>
+                        <label for="last_name">
+                            Middle Names
+                        </label>
+                    </template>
+
+                    <template #input>
+                        <InputText class="w-full sm:w-60"
+                                   id="last_name"
+                                   name="last_name"
+                                   :errors="page.props.errors"
+                                   rounded
+                                   show-errors
+                                   maxlength="85"
+                                   placeholder="Last Name"
+                                   v-model="model.last_name"
+                        />
+                    </template>
+                </Wrapper>
+
+                <Wrapper>
+                    <template #text>
+                        <label for="dob">
+                            Date of Birth
+                        </label>
+                    </template>
+
+                    <template #input>
+                        <Datepicker v-model="model.dob"
+                                    dropdown
+                                    :errors="page.props.errors"
+                                    name="dob"
+                                    class="w-full sm:w-60"
+                                    id="dob"
+                        />
+                    </template>
+                </Wrapper>
+
+                <Wrapper>
+                    <template #text>
+                        <label for="personal_number">
+                            Personal Phone Number
+                        </label>
+                    </template>
+
+                    <template #help>
+                        Only numbers, spaces, + ( ) . -
+                    </template>
+
+                    <template #input>
+                        <InputText class="w-full sm:w-60"
+                                   id="personal_number"
+                                   name="personal_number"
+                                   :errors="page.props.errors"
+                                   rounded
+                                   show-errors
+                                   maxlength="85"
+                                   placeholder="Personal Phone Number"
+                                   v-model="model.personal_number"
+                                   pattern="^[0-9 \+\(\)\.\-]*$"
+                                   title="Only numbers, spaces, + ( ) . -"
+                        />
+                    </template>
+                </Wrapper>
+
+                <Wrapper>
+                    <template #text>
+                        <label for="personal_mobile_number">
+                            Personal Mobile Phone Number
+                        </label>
+                    </template>
+
+                    <template #help>
+                        Only numbers, spaces, + ( ) . -
+                    </template>
+
+                    <template #input>
+                        <InputText class="w-full sm:w-60"
+                                   id="personal_mobile_number"
+                                   name="personal_mobile_number"
+                                   :errors="page.props.errors"
+                                   rounded
+                                   show-errors
+                                   maxlength="85"
+                                   placeholder="Personal Mobile Phone Number"
+                                   v-model="model.personal_mobile_number"
+                                   pattern="^[0-9 \+\(\)\.\-]*$"
+                                   title="Only numbers, spaces, + ( ) . -"
+                        />
+                    </template>
+                </Wrapper>
+
+                <Wrapper>
+                    <template #text>
+                        <label for="personal_email">
+                            Personal Email
+                        </label>
+                    </template>
+
+                    <template #input>
+                        <InputText class="w-full sm:w-60"
+                                   id="personal_email"
+                                   name="personal_email"
+                                   :errors="page.props.errors"
+                                   rounded
+                                   show-errors
+                                   maxlength="85"
+                                   placeholder="Personal Email"
+                                   v-model="model.personal_email"
+                                   type="email"
+                                   title="Enter a valid email address (example@domain.com)"
+                        />
+                    </template>
+                </Wrapper>
+
                 <Submit>Update</Submit>
 
             </Form>
         </div>
+        <div v-else-if="activeTab.key === 'company_profile'">
+            <Form :action="route('admin.users.update.company-profile', model)"
+                  method="patch"
+                  @success="() => keepHash('company_profile')"
+                  :options="{ preserveState: true, preserveScroll: true }"
+            >
+                <Wrapper>
+                    <template #text>
+                        <label for="company_ext">Company Ext</label>
+                    </template>
+
+                    <template #help>
+                        Only numbers and spaces
+                    </template>
+
+                    <template #input>
+                        <InputText class="w-full sm:w-60"
+                                   id="company_ext"
+                                   name="company_ext"
+                                   :errors="page.props.errors"
+                                   rounded
+                                   show-errors
+                                   maxlength="255"
+                                   placeholder="Company Ext"
+                                   v-model="model.company_ext"
+                                   pattern="^[0-9 ]*$"
+                                   title="Only numbers and spaces allowed"
+                        />
+                    </template>
+                </Wrapper>
+
+                <Wrapper>
+                    <template #text>
+                        <label for="company_number">Company Number</label>
+                    </template>
+
+                    <template #help>
+                        Only numbers, spaces, + ( ) . -
+                    </template>
+
+                    <template #input>
+                        <InputText class="w-full sm:w-60"
+                                   id="company_number"
+                                   name="company_number"
+                                   :errors="page.props.errors"
+                                   rounded
+                                   show-errors
+                                   maxlength="255"
+                                   placeholder="Company Number"
+                                   v-model="model.company_number"
+                                   pattern="^[0-9 \+\(\)\.\-]*$"
+                                   title="Only numbers, spaces, + ( ) . -"
+                        />
+                    </template>
+                </Wrapper>
+
+                <Wrapper>
+                    <template #text>
+                        <label for="company_mobile_number">Company Mobile Number</label>
+                    </template>
+
+                    <template #help>
+                        Only numbers, spaces, + ( ) . -
+                    </template>
+
+                    <template #input>
+                        <InputText class="w-full sm:w-60"
+                                   id="company_mobile_number"
+                                   name="company_mobile_number"
+                                   :errors="page.props.errors"
+                                   rounded
+                                   show-errors
+                                   maxlength="255"
+                                   placeholder="Company Mobile Number"
+                                   v-model="model.company_mobile_number"
+                                   pattern="^[0-9 \+\(\)\.\-]*$"
+                                   title="Only numbers, spaces, + ( ) . -"
+                        />
+                    </template>
+                </Wrapper>
+
+                <Wrapper>
+                    <template #text>
+                        <label for="email">Email</label>
+                    </template>
+
+                    <template #input>
+                        <InputText class="w-full sm:w-60"
+                                   type="email"
+                                   id="email"
+                                   name="email"
+                                   :errors="page.props.errors"
+                                   rounded
+                                   show-errors
+                                   maxlength="255"
+                                   placeholder="Email"
+                                   v-model="model.email"
+                                   title="Enter a valid email address (example@domain.com)"
+                        />
+                    </template>
+                </Wrapper>
+
+                <Submit>Update</Submit>
+
+            </Form>
+        </div>
+        <div v-else-if="activeTab.key === 'address'" class="p-4">
+            <AddressList/>
+        </div>
+
     </div>
 </template>
