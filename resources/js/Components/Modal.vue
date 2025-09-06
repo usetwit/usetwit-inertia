@@ -6,6 +6,7 @@ const props = defineProps({
     variant: {type: String, default: 'primary'},
     icon: {type: String, default: null},
     label: {type: String, default: null},
+    loading: {type: Boolean, default: false},
 });
 
 const emit = defineEmits(['closed', 'accepted']);
@@ -42,6 +43,7 @@ const accept = () => {
                                 class="mr-1"
                                 icon="pi pi-times-circle"
                                 border
+                                :loading="loading"
                         >
                             Cancel
                         </Button>
@@ -51,6 +53,7 @@ const accept = () => {
                                     :icon="icon"
                                     :label="label"
                                     border
+                                    :loading="loading"
                             ></Button>
                         </slot>
                     </div>

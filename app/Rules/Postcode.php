@@ -10,14 +10,12 @@ class Postcode implements ValidationRule
 {
     public function __construct(
         protected int $maxLength = 12,
-    )
-    {
-    }
+    ) {}
 
     /**
      * Run the validation rule.
      *
-     * @param Closure(string, ?string=): PotentiallyTranslatedString $fail
+     * @param  Closure(string, ?string=): PotentiallyTranslatedString  $fail
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
@@ -27,12 +25,14 @@ class Postcode implements ValidationRule
 
         if (! is_string($value)) {
             $fail("The {$attribute} must be a string.");
+
             return;
         }
 
         $length = mb_strlen($value);
         if ($length > $this->maxLength) {
             $fail("The {$attribute} may not be greater than {$this->maxLength} characters.");
+
             return;
         }
 
