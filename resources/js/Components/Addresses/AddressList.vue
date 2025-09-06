@@ -16,9 +16,10 @@ const model = ref(page.props.model);
 const showEditModal = ref(false);
 const showDeleteModal = ref(false);
 const loading = ref(false);
-const editAddress = ref(null);
+const editAddressData = ref(null);
+const toDeleteItem = ref(null);
 
-const makeDefault = async (address) => {
+const handleMakeDefault = async (address) => {
     loading.value = true;
 
     const {data, status, getResponse} = useAxios(
@@ -43,7 +44,7 @@ const update = async (address) => {
 
     const {data, status, getResponse} = useAxios(
         route('admin.addresses.user.update', {user: model.value, address: address}),
-        editAddress.value,
+        editAddressData.value,
         'patch',
     );
 
@@ -59,12 +60,34 @@ const update = async (address) => {
     loading.value = false;
 };
 
-const edit = (address) => {
+const handleEdit = (address) => {
     showEditModal.value = true;
-    editAddress.value = {...address};
+    editAddressData.value = {...address};
 };
 
-const deleteAddress = (address) => {
+const doDelete = async () => {
+    loading.value = true;
+
+    const {data, status, getResponse} = useAxios(
+        route('admin.addresses.user.destroy', {user: model.value, address: toDeleteItem.value}),
+        {},
+        'delete',
+    );
+
+    await getResponse();
+
+    if (status.value === 200) {
+        model.value.addresses = data.value.addresses;
+
+        toast.success(data.value.message);
+    }
+
+    showDeleteModal.value = false;
+    loading.value = false;
+};
+
+const handleDelete = (address) => {
+    toDeleteItem.value = address;
     showDeleteModal.value = true;
 };
 </script>
@@ -75,9 +98,9 @@ const deleteAddress = (address) => {
                      :key="a.id"
                      :address="a"
                      :loading="loading"
-                     @make-default="makeDefault(a)"
-                     @edit="edit(a)"
-                     @delete="deleteAddress(a)"
+                     @make-default="handleMakeDefault(a)"
+                     @edit="handleEdit(a)"
+                     @delete="handleDelete(a)"
         />
     </div>
 
@@ -85,10 +108,20 @@ const deleteAddress = (address) => {
            v-model="showEditModal"
            icon="pi pi-save"
            label="Update Address"
-           @accepted="update(editAddress)"
+           @accepted="update(editAddressData)"
            :loading="loading"
     >
-        <AddressForm v-model="editAddress"/>
+        <AddressForm v-model="editAddressData"/>
+    </Modal>
+
+    <Modal v-if="showDeleteModal"
+           v-model="showDeleteModal"
+           icon="pi pi-trash"
+           label="Delete Address"
+           @accepted="doDelete"
+           :loading="loading"
+    >
+        Are you sure you want to delete this address?
     </Modal>
 
 </template>
