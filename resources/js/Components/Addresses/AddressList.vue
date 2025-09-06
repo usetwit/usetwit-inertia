@@ -1,5 +1,5 @@
 <script setup>
-import {router, usePage} from '@inertiajs/vue3';
+import {Link, router, usePage} from '@inertiajs/vue3';
 import {computed, ref} from 'vue';
 import Button from '@/Components/Form/Button.vue';
 import {route} from 'ziggy-js';
@@ -10,80 +10,64 @@ import AddressItem from '@/Components/Addresses/AddressItem.vue';
 import AddressForm from '@/Components/Addresses/AddressForm.vue';
 
 const page = usePage();
-const user = computed(() => page.props.user);
-const model = ref(page.props.model);
+const permissions = computed(() => page.props.permissions);
+const model = computed(() => page.props.model);
 
 const showEditModal = ref(false);
 const showDeleteModal = ref(false);
+const showNewModal = ref(false);
 const loading = ref(false);
-const editAddressData = ref(null);
+const editItem = ref(null);
 const toDeleteItem = ref(null);
 
-const handleMakeDefault = async (address) => {
-    loading.value = true;
-
-    const {data, status, getResponse} = useAxios(
-        route('admin.addresses.user.make-default', {user: model.value, address: address}),
+const handleMakeDefault = (address) => {
+    router.patch(
+        route('admin.addresses.user.make-default', {address}),
         {},
-        'patch',
+        {
+            preserveScroll: true,
+            onStart: () => (loading.value = true),
+            onSuccess: () => router.reload({only: ['model']}),
+            onFinish: () => (loading.value = false),
+        },
     );
-
-    await getResponse();
-
-    if (status.value === 200) {
-        model.value.addresses = data.value.addresses;
-
-        toast.success(data.value.message);
-    }
-
-    loading.value = false;
 };
 
-const update = async (address) => {
-    loading.value = true;
-
-    const {data, status, getResponse} = useAxios(
-        route('admin.addresses.user.update', {user: model.value, address: address}),
-        editAddressData.value,
-        'patch',
+const update = (address) => {
+    router.patch(
+        route('admin.addresses.user.update', {address}),
+        editItem.value,
+        {
+            preserveScroll: true,
+            onStart: () => (loading.value = true),
+            onSuccess: () => {
+                router.reload({only: ['model']});
+                showEditModal.value = false;
+            },
+            onFinish: () => (loading.value = false),
+        },
     );
-
-    await getResponse();
-
-    if (status.value === 200) {
-        model.value.addresses = data.value.addresses;
-
-        toast.success(data.value.message);
-    }
-
-    showEditModal.value = false;
-    loading.value = false;
 };
 
 const handleEdit = (address) => {
+    editItem.value = {...address};
     showEditModal.value = true;
-    editAddressData.value = {...address};
 };
 
-const doDelete = async () => {
-    loading.value = true;
-
-    const {data, status, getResponse} = useAxios(
-        route('admin.addresses.user.destroy', {user: model.value, address: toDeleteItem.value}),
-        {},
-        'delete',
+const doDelete = (address) => {
+    router.delete(
+        route('admin.addresses.user.destroy', {address}),
+        {
+            preserveScroll: true,
+            preserveState: true,
+            onStart: () => (loading.value = true),
+            onSuccess: () => {
+                router.reload({only: ['model']});
+                showDeleteModal.value = false;
+            },
+            onFinish: () => (loading.value = false),
+        },
     );
-
-    await getResponse();
-
-    if (status.value === 200) {
-        model.value.addresses = data.value.addresses;
-
-        toast.success(data.value.message);
-    }
-
-    showDeleteModal.value = false;
-    loading.value = false;
 };
 
 const handleDelete = (address) => {
@@ -93,6 +77,12 @@ const handleDelete = (address) => {
 </script>
 
 <template>
+    <div v-if="permissions.includes('addresses.user.create')" class="top-links">
+        <Button class="create-link" :href="route('admin.addresses.user.create', {user: model})">
+            <i class="pi pi-sparkles mr-1"></i>Create New Address
+        </Button>
+    </div>
+
     <div class="grid gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
         <AddressItem v-for="a in model.addresses"
                      :key="a.id"
@@ -108,17 +98,17 @@ const handleDelete = (address) => {
            v-model="showEditModal"
            icon="pi pi-save"
            label="Update Address"
-           @accepted="update(editAddressData)"
+           @accepted="update(editItem)"
            :loading="loading"
     >
-        <AddressForm v-model="editAddressData"/>
+        <AddressForm v-model="editItem"/>
     </Modal>
 
     <Modal v-if="showDeleteModal"
            v-model="showDeleteModal"
            icon="pi pi-trash"
            label="Delete Address"
-           @accepted="doDelete"
+           @accepted="doDelete(toDeleteItem)"
            :loading="loading"
     >
         Are you sure you want to delete this address?

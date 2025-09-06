@@ -57,17 +57,15 @@ Route::prefix('admin')
                         ->name('user.create')
                         ->can('createAddress', 'user');
 
-                    Route::patch('user/{user}/{address}', 'userUpdate')
+                    Route::patch('update/{address}', 'userUpdate')
                         ->name('user.update')
-                        ->scopeBindings()
                         ->can('updateUserAddress', 'address');
 
-                    Route::patch('user/{user}/make-default/{address}', 'userMakeDefault')
+                    Route::patch('user-make-default/{address}', 'makeDefault')
                         ->name('user.make-default')
-                        ->scopeBindings()
                         ->can('updateUserAddress', 'address');
 
-                    Route::delete('user/{user}/delete/{address}', 'userDestroy')
+                    Route::delete('delete/{address}', 'userDestroy')
                         ->name('user.destroy')
                         ->scopeBindings()
                         ->can('deleteUserAddress', 'address');

@@ -12,7 +12,6 @@ const emit = defineEmits(['edit', 'delete', 'make-default']);
 
 const page = usePage();
 const permissions = computed(() => page.props.permissions);
-const user = computed(() => page.props.user);
 </script>
 
 <template>
@@ -59,7 +58,7 @@ const user = computed(() => page.props.user);
                     class="text-xs"
                     @click="$emit('make-default', address)"
                     :loading="loading"
-                    v-if="!address.is_default && permissions.includes('addresses.user.update') || permissions.includes('addresses.user.update.self')"
+                    v-if="!address.is_default && (permissions.includes('addresses.user.update') || permissions.includes('addresses.user.update.self'))"
             >
                 Default
             </Button>

@@ -6,8 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Addresses\CreateUserRequest;
 use App\Http\Requests\Admin\Addresses\UpdateUserRequest;
 use App\Models\Address;
-use App\Models\Company;
-use App\Models\Location;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 
@@ -31,53 +29,32 @@ class AddressController extends Controller
         ], 201);
     }
 
-    private function makeDefault(User|Company|Location $model, Address $address): JsonResponse
+    public function makeDefault(Address $address)
     {
         $address->update(['is_default' => true]);
 
-        return response()->json([
-            'addresses' => $model->addresses,
-            'message' => 'Address set as default',
-        ]);
+        return back(303)->with('success', 'Address set as default');
     }
 
-    public function userMakeDefault(User $user, Address $address): JsonResponse
+    public function userDestroy(Address $address)
     {
-        return $this->makeDefault($user, $address);
-    }
-
-    public function userDestroy(User $user, Address $address): JsonResponse
-    {
-        $wasDefault = $address->is_default;
-
         $address->delete();
 
-        if ($wasDefault) {
-            $newDefault = $user
+        if ($address->is_default) {
+            $address->addressable
                 ->addresses()
                 ->orderByDesc('updated_at')
-                ->first();
-
-            if ($newDefault) {
-                $newDefault->update(['is_default' => true]);
-            }
+                ->first()
+                ?->update(['is_default' => true]);
         }
 
-        $user->load('addresses');
-
-        return response()->json([
-            'addresses' => $user->addresses,
-            'message' => 'Address deleted',
-        ]);
+        return back(303)->with('success', 'Address deleted');
     }
 
-    public function userUpdate(User $user, Address $address, UpdateUserRequest $request): JsonResponse
+    public function userUpdate(Address $address, UpdateUserRequest $request)
     {
         $address->update($request->validated());
 
-        return response()->json([
-            'addresses' => $user->addresses,
-            'message' => 'Address updated',
-        ]);
+        return back(303)->with('success', 'Address updated');
     }
 }
