@@ -11,7 +11,7 @@ import {route} from 'ziggy-js';
 
 const page = usePage();
 const permissions = computed(() => page.props.permissions);
-const user = computed(() => page.props.user);
+const auth = computed(() => page.props.auth);
 const paginationSettings = computed(() => page.props.paginationSettings);
 const dateSettings = computed(() => page.props.dateSettings);
 
@@ -93,7 +93,7 @@ provide('tableInstance', tableInstance);
             <Column sticky class="w-16" options>
                 <template #body="{ row }">
                     <Link
-                        v-if="permissions.includes('boms.update') || (permissions.includes('boms.update.self') && row.user_id === user.id)"
+                        v-if="permissions.includes('boms.update') || (permissions.includes('boms.update.self') && row.user_id === auth.id)"
                         :href="route('admin.boms.edit', row)"
                         class="record-edit"
                         title="Edit"

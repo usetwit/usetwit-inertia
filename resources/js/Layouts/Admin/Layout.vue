@@ -7,7 +7,7 @@ import Sidebar from '@/Components/Admin/Sidebar/Sidebar.vue';
 import {computed, watch} from 'vue';
 
 const page = usePage();
-const user = computed(() => page.props.user);
+const auth = computed(() => page.props.auth);
 const profileImage = page.props.profileImage;
 const version = computed(() => page.props.version);
 const sidebarItems = computed(() => page.props.sidebar_items);
@@ -47,7 +47,7 @@ watch(errors, (val) => {
     </div>
 
     <div id="navbar" class="sticky top-0 z-200">
-        <Navbar :user="user" :profile-image="profileImage" :logo="logo"/>
+        <Navbar :auth="auth" :profile-image="profileImage" :logo="logo"/>
     </div>
 
     <div class="bg-slate-100 dark:bg-slate-700 flex">

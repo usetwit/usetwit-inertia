@@ -134,8 +134,6 @@ class UserController extends Controller
         $breadcrumbs = Breadcrumbs::generate('admin.users.edit', $user);
 
         $model = $user;
-        $countries = $settings->countries();
-        $defaultCountry = $settings->default_country;
 
         $model->load([
             'addresses' => function ($query) {
@@ -158,9 +156,14 @@ class UserController extends Controller
             },
         ]);
 
-        $roles = Role::get(['id', 'name']);
-
-        return Inertia::render('Admin/Users/Edit', compact('model', 'roles', 'countries', 'defaultCountry', 'heading', 'breadcrumbs'));
+        return Inertia::render('Admin/Users/Edit', [
+            'user' => fn () => $model,
+            'roles' => fn () => Role::get(['id', 'name']),
+            'countries' => fn () => $settings->countries(),
+            'defaultCountry' => fn () => $settings->default_country,
+            'heading' => $heading,
+            'breadcrumbs' => $breadcrumbs,
+        ]);
     }
 
     public function usernameExists(UsernameExistsRequest $request): JsonResponse

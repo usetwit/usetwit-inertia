@@ -34,7 +34,7 @@ class UserUpdateController extends Controller
             'personal_email',
         ]));
 
-        return redirect()->back();
+        return redirect()->back()->with(['success' => 'Personal Profile Updated Successfully']);
     }
 
     public function updateCompanyProfile(UpdateCompanyProfileRequest $request, User $user): RedirectResponse
@@ -46,7 +46,7 @@ class UserUpdateController extends Controller
             'company_mobile_number',
         ]));
 
-        return redirect()->back();
+        return redirect()->back()->with(['success' => 'Company Profile Updated Successfully']);
     }
 
     public function updateProtectedInfo(UpdateProtectedInfoRequest $request, User $user): RedirectResponse

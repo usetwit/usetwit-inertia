@@ -12,7 +12,6 @@ import {route} from 'ziggy-js';
 
 const page = usePage();
 const permissions = computed(() => page.props.permissions);
-const user = computed(() => page.props.user);
 const paginationSettings = computed(() => page.props.paginationSettings);
 const dateSettings = computed(() => page.props.dateSettings);
 

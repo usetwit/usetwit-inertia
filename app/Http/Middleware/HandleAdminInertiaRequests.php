@@ -129,23 +129,23 @@ class HandleAdminInertiaRequests extends Middleware
             return parent::share($request);
         }
 
-        $user = Auth::user();
+        $auth = Auth::user();
         $settings = app(GeneralSettings::class);
 
         return array_merge(parent::share($request), [
             'appName' => config('app.name'),
-            'user' => $user?->only(['id', 'name', 'username', 'full_name', 'slug']),
+            'auth' => $auth?->only(['id', 'name', 'username', 'full_name', 'slug']),
             'flash' => [
                 'success' => fn () => $request->session()->get('success'),
                 'error' => fn () => $request->session()->get('error'),
             ],
-            'profileImage' => $this->profileImage($user),
+            'profileImage' => $this->profileImage($auth),
             'version' => config('app.version'),
             'sidebar_items' => $this->sidebarItems(),
             'logo' => asset('images/logo.svg', true),
             'dateSettings' => $settings->dateSettings(),
             'paginationSettings' => $settings->paginationSettings(),
-            'permissions' => $user?->getAllPermissions()->pluck('name'),
+            'permissions' => $auth?->getAllPermissions()->pluck('name'),
         ]);
     }
 

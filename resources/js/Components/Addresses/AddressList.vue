@@ -1,24 +1,32 @@
 <script setup>
-import {Link, router, usePage} from '@inertiajs/vue3';
+import {router, usePage} from '@inertiajs/vue3';
 import {computed, ref} from 'vue';
 import Button from '@/Components/Form/Button.vue';
 import {route} from 'ziggy-js';
-import useAxios from '@/composables/useAxios.js';
-import {toast} from 'vue3-toastify';
 import Modal from '@/Components/Modal.vue';
 import AddressItem from '@/Components/Addresses/AddressItem.vue';
 import AddressForm from '@/Components/Addresses/AddressForm.vue';
 
 const page = usePage();
 const permissions = computed(() => page.props.permissions);
-const model = computed(() => page.props.model);
+const user = computed(() => page.props.user);
+const defaultCountry = computed(() => page.props.defaultCountry);
+
+const emptyAddress = {
+    address_line_1: '',
+    address_line_2: '',
+    address_line_3: '',
+    postcode: '',
+    country_code: defaultCountry.value,
+};
 
 const showEditModal = ref(false);
 const showDeleteModal = ref(false);
 const showNewModal = ref(false);
 const loading = ref(false);
 const editItem = ref(null);
-const toDeleteItem = ref(null);
+const deleteItem = ref(null);
+const newItem = ref({...emptyAddress});
 
 const handleMakeDefault = (address) => {
     router.patch(
@@ -27,7 +35,7 @@ const handleMakeDefault = (address) => {
         {
             preserveScroll: true,
             onStart: () => (loading.value = true),
-            onSuccess: () => router.reload({only: ['model']}),
+            onSuccess: () => router.reload({only: ['user']}),
             onFinish: () => (loading.value = false),
         },
     );
@@ -41,7 +49,7 @@ const update = (address) => {
             preserveScroll: true,
             onStart: () => (loading.value = true),
             onSuccess: () => {
-                router.reload({only: ['model']});
+                router.reload({only: ['user']});
                 showEditModal.value = false;
             },
             onFinish: () => (loading.value = false),
@@ -62,7 +70,7 @@ const doDelete = (address) => {
             preserveState: true,
             onStart: () => (loading.value = true),
             onSuccess: () => {
-                router.reload({only: ['model']});
+                router.reload({only: ['user']});
                 showDeleteModal.value = false;
             },
             onFinish: () => (loading.value = false),
@@ -71,20 +79,40 @@ const doDelete = (address) => {
 };
 
 const handleDelete = (address) => {
-    toDeleteItem.value = address;
+    deleteItem.value = address;
     showDeleteModal.value = true;
+};
+
+const doCreateNew = () => {
+    router.post(
+        route('admin.addresses.user.create', {user: user.value}),
+        newItem.value,
+        {
+            preserveScroll: true,
+            preserveState: true,
+            onStart: () => (loading.value = true),
+            onSuccess: () => {
+                router.reload({only: ['user']});
+                showNewModal.value = false;
+                newItem.value = {...emptyAddress};
+            },
+            onFinish: () => (loading.value = false),
+        },
+    );
 };
 </script>
 
 <template>
     <div v-if="permissions.includes('addresses.user.create')" class="top-links">
-        <Button class="create-link" :href="route('admin.addresses.user.create', {user: model})">
+        <Button class="create-link"
+                @click="showNewModal = true"
+        >
             <i class="pi pi-sparkles mr-1"></i>Create New Address
         </Button>
     </div>
 
     <div class="grid gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
-        <AddressItem v-for="a in model.addresses"
+        <AddressItem v-for="a in user.addresses"
                      :key="a.id"
                      :address="a"
                      :loading="loading"
@@ -108,10 +136,20 @@ const handleDelete = (address) => {
            v-model="showDeleteModal"
            icon="pi pi-trash"
            label="Delete Address"
-           @accepted="doDelete(toDeleteItem)"
+           @accepted="doDelete(deleteItem)"
            :loading="loading"
     >
         Are you sure you want to delete this address?
+    </Modal>
+
+    <Modal v-if="showNewModal"
+           v-model="showNewModal"
+           icon="pi pi-sparkles"
+           label="Create Address"
+           @accepted="doCreateNew"
+           :loading="loading"
+    >
+        <AddressForm v-model="newItem"/>
     </Modal>
 
 </template>

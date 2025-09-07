@@ -3,41 +3,29 @@ import {computed, ref, useTemplateRef, watch} from 'vue';
 import Tab from '@/components/Tab.vue';
 import Wrapper from '@/components/Form/Wrapper.vue';
 import InputText from '@/components/Form/InputText.vue';
-import Button from '@/components/Form/Button.vue';
-import FormWrapper from '@/components/Form/Wrapper.vue';
-import Select from '@/components/Form/Select.vue';
 import Datepicker from '@/components/Form/Datepicker.vue';
-import Password from '@/components/Form/Password.vue';
 import useAxios from '@/composables/useAxios.js';
-import {debounce, pick} from 'lodash';
-import {toast} from 'vue3-toastify';
-import Modal from '@/components/Modal.vue';
-import {Form, router, usePage} from '@inertiajs/vue3';
+import {debounce} from 'lodash';
+import {Form, usePage} from '@inertiajs/vue3';
 import {route} from 'ziggy-js';
 import Submit from '@/Components/Form/Submit.vue';
 import AddressList from '@/Components/Addresses/AddressList.vue';
 
 const page = usePage();
-const model = ref({
-    ...page.props.model,
+const user = ref({
+    ...page.props.user,
     new_password: '',
     new_password_confirmation: '',
     current_password: '',
 });
-const user = computed(() => page.props.user);
+const auth = computed(() => page.props.auth);
 const permissions = computed(() => page.props.permissions);
-const countries = computed(() => page.props.countries);
-const defaultCountry = computed(() => page.props.defaultCountry);
-const roles = computed(() => page.props.roles);
-const dateSettings = computed(() => page.props.dateSettings);
 
 const usernameExists = ref(false);
 const employeeIdExists = ref(false);
 const loading = ref(false);
 const tabs = ref([]);
 const activeTab = ref(null);
-const deleteModalIsVisible = ref(false);
-const deleteUserForm = useTemplateRef('deleteUserForm');
 
 const rules = [
     {
@@ -45,35 +33,35 @@ const rules = [
         icon: 'pi pi-user-edit',
         text: 'Personal',
         perm: permissions.value.includes('users.update.personal-profile')
-            || (permissions.value.includes('users.update.self.personal-profile') && model.value.id === user.value.id),
+            || (permissions.value.includes('users.update.self.personal-profile') && user.value.id === auth.value.id),
     },
     {
         key: 'company_profile',
         icon: 'pi pi-building',
         text: 'Company',
         perm: permissions.value.includes('users.update.company-profile')
-            || (permissions.value.includes('users.update.self.company-profile') && model.value.id === user.value.id),
+            || (permissions.value.includes('users.update.self.company-profile') && user.value.id === auth.value.id),
     },
     {
         key: 'image',
         icon: 'pi pi-image',
         text: 'Profile Image',
         perm: permissions.value.includes('users.update.image')
-            || (permissions.value.includes('users.update.self.image') && model.value.id === user.value.id),
+            || (permissions.value.includes('users.update.self.image') && user.value.id === auth.value.id),
     },
     {
         key: 'address',
         icon: 'pi pi-map',
         text: 'Address',
         perm: permissions.value.includes('addresses.user.update')
-            || (permissions.value.includes('addresses.user.update.self') && model.value.id === user.value.id),
+            || (permissions.value.includes('addresses.user.update.self') && user.value.id === auth.value.id),
     },
     {
         key: 'password',
         icon: 'pi pi-key',
         text: 'Password',
         perm: permissions.value.includes('users.update.password')
-            || (permissions.value.includes('users.update.self.password') && model.value.id === user.value.id),
+            || (permissions.value.includes('users.update.self.password') && user.value.id === auth.value.id),
     },
     {
         key: 'protected_info',
@@ -148,19 +136,6 @@ const debouncedUpdateEmployeeIdExists = debounce(updateEmployeeIdExists, 300, {l
 watch(() => user.value.username, (newValue) => {
     user.value.username = newValue.toLowerCase();
 });
-
-const keepHash = (hash) => {
-    const u = new URL(location.href);
-    u.hash = hash;
-    history.replaceState(null, '', u);
-
-    const t = tabs.value.find(t => t.key === hash);
-    if (t) {
-        activeTab.value = t;
-    }
-
-    toast.success('User updated');
-};
 </script>
 
 <template>
@@ -176,10 +151,16 @@ const keepHash = (hash) => {
     <div class="content content-margin">
 
         <div v-if="activeTab.key === 'personal_profile'">
-            <Form :action="route('admin.users.update.personal-profile', model)"
+            <Form :action="route('admin.users.update.personal-profile', user)"
                   method="patch"
-                  @success="() => keepHash('personal_profile')"
-                  :options="{ preserveState: true, preserveScroll: true }"
+                  :options="{
+                      preserveState: true,
+                      preserveScroll: true,
+                      only: ['user', 'flash']
+                  }"
+                  #default="{
+                      processing
+                  }"
             >
                 <Wrapper required>
                     <template #text>
@@ -197,7 +178,7 @@ const keepHash = (hash) => {
                                    show-errors
                                    maxlength="85"
                                    placeholder="First Name"
-                                   v-model="model.first_name"
+                                   v-model="user.first_name"
                         />
                     </template>
                 </Wrapper>
@@ -218,7 +199,7 @@ const keepHash = (hash) => {
                                    show-errors
                                    maxlength="85"
                                    placeholder="Middle Names"
-                                   v-model="model.middle_names"
+                                   v-model="user.middle_names"
                         />
                     </template>
                 </Wrapper>
@@ -239,7 +220,7 @@ const keepHash = (hash) => {
                                    show-errors
                                    maxlength="85"
                                    placeholder="Last Name"
-                                   v-model="model.last_name"
+                                   v-model="user.last_name"
                         />
                     </template>
                 </Wrapper>
@@ -252,7 +233,7 @@ const keepHash = (hash) => {
                     </template>
 
                     <template #input>
-                        <Datepicker v-model="model.dob"
+                        <Datepicker v-model="user.dob"
                                     dropdown
                                     :errors="page.props.errors"
                                     name="dob"
@@ -282,7 +263,7 @@ const keepHash = (hash) => {
                                    show-errors
                                    maxlength="85"
                                    placeholder="Personal Phone Number"
-                                   v-model="model.personal_number"
+                                   v-model="user.personal_number"
                                    pattern="^[0-9 \+\(\)\.\-]*$"
                                    title="Only numbers, spaces, + ( ) . -"
                         />
@@ -309,7 +290,7 @@ const keepHash = (hash) => {
                                    show-errors
                                    maxlength="85"
                                    placeholder="Personal Mobile Phone Number"
-                                   v-model="model.personal_mobile_number"
+                                   v-model="user.personal_mobile_number"
                                    pattern="^[0-9 \+\(\)\.\-]*$"
                                    title="Only numbers, spaces, + ( ) . -"
                         />
@@ -332,22 +313,28 @@ const keepHash = (hash) => {
                                    show-errors
                                    maxlength="85"
                                    placeholder="Personal Email"
-                                   v-model="model.personal_email"
+                                   v-model="user.personal_email"
                                    type="email"
                                    title="Enter a valid email address (example@domain.com)"
                         />
                     </template>
                 </Wrapper>
 
-                <Submit>Update</Submit>
+                <Submit :loading="processing">Update</Submit>
 
             </Form>
         </div>
         <div v-else-if="activeTab.key === 'company_profile'">
-            <Form :action="route('admin.users.update.company-profile', model)"
+            <Form :action="route('admin.users.update.company-profile', user)"
                   method="patch"
-                  @success="() => keepHash('company_profile')"
-                  :options="{ preserveState: true, preserveScroll: true }"
+                  :options="{
+                      preserveState: true,
+                      preserveScroll: true,
+                      only: ['user', 'flash'],
+                  }"
+                  #default="{
+                      processing
+                  }"
             >
                 <Wrapper>
                     <template #text>
@@ -367,7 +354,7 @@ const keepHash = (hash) => {
                                    show-errors
                                    maxlength="255"
                                    placeholder="Company Ext"
-                                   v-model="model.company_ext"
+                                   v-model="user.company_ext"
                                    pattern="^[0-9 ]*$"
                                    title="Only numbers and spaces allowed"
                         />
@@ -392,7 +379,7 @@ const keepHash = (hash) => {
                                    show-errors
                                    maxlength="255"
                                    placeholder="Company Number"
-                                   v-model="model.company_number"
+                                   v-model="user.company_number"
                                    pattern="^[0-9 \+\(\)\.\-]*$"
                                    title="Only numbers, spaces, + ( ) . -"
                         />
@@ -417,7 +404,7 @@ const keepHash = (hash) => {
                                    show-errors
                                    maxlength="255"
                                    placeholder="Company Mobile Number"
-                                   v-model="model.company_mobile_number"
+                                   v-model="user.company_mobile_number"
                                    pattern="^[0-9 \+\(\)\.\-]*$"
                                    title="Only numbers, spaces, + ( ) . -"
                         />
@@ -439,13 +426,13 @@ const keepHash = (hash) => {
                                    show-errors
                                    maxlength="255"
                                    placeholder="Email"
-                                   v-model="model.email"
+                                   v-model="user.email"
                                    title="Enter a valid email address (example@domain.com)"
                         />
                     </template>
                 </Wrapper>
 
-                <Submit>Update</Submit>
+                <Submit :loading="processing">Update</Submit>
 
             </Form>
         </div>

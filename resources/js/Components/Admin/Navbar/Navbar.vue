@@ -6,7 +6,7 @@ const store = useMenuStore();
 
 const props = defineProps({
     profileImage: {type: String, required: true},
-    user: {type: Object, required: true},
+    auth: {type: Object, required: true},
     logo: {type: String, required: true},
 });
 
@@ -35,7 +35,7 @@ const makeMenuVisible = () => {
         </div>
         <div class="flex items-center right-buttons">
             <ProfileDropdown :profile-image="profileImage"
-                             :user="user"
+                             :auth="auth"
             />
         </div>
     </div>

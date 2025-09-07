@@ -5,7 +5,7 @@ import {Form} from '@inertiajs/vue3';
 
 const props = defineProps({
     profileImage: {type: String, required: true},
-    user: {type: Object, required: true},
+    auth: {type: Object, required: true},
 });
 
 const {activeData: darkMode, set: saveToStorage} = useStorage('dark-mode', false);
@@ -40,10 +40,10 @@ const {
             class="flex items-center rounded-full bg-slate-700 ml-3 hover:bg-slate-600 border border-slate-500"
             @click="toggleDropdown"
     >
-        <span class="pl-4 hidden sm:block mr-2 whitespace-nowrap text-sm">{{ user.full_name }}</span>
+        <span class="pl-4 hidden sm:block mr-2 whitespace-nowrap text-sm">{{ auth.full_name }}</span>
         <span class="rounded-full bg-emerald-500">
             <img :src="profileImage"
-                 :alt="user.full_name"
+                 :alt="auth.full_name"
                  class="object-cover w-10 h-10 rounded-full shadow-sm"
             />
         </span>
@@ -82,7 +82,7 @@ const {
                     </button>
                 </li>
                 <li class="w-full mt-1 border-t border-gray-400">
-                    <Form action="/admin/logout" method="post" class="mt-1">
+                    <Form :action="route('admin.auth.logout')" method="post" class="mt-1">
                         <button type="submit"
                                 title="Sign Out"
                                 class="p-2 flex items-center align-middle w-full rounded-md hover:bg-gray-100"
