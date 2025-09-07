@@ -18,6 +18,7 @@ const countries = computed(() => page.props.countries);
 
         <template #input>
             <InputText id="address_line_1"
+                       maxlength="255"
                        rounded
                        v-model="address.address_line_1"
             />
@@ -31,6 +32,7 @@ const countries = computed(() => page.props.countries);
 
         <template #input>
             <InputText id="address_line_2"
+                       maxlength="255"
                        rounded
                        v-model="address.address_line_2"
             />
@@ -44,6 +46,7 @@ const countries = computed(() => page.props.countries);
 
         <template #input>
             <InputText id="address_line_3"
+                       maxlength="255"
                        rounded
                        v-model="address.address_line_3"
             />

@@ -41,9 +41,9 @@ const handleMakeDefault = (address) => {
     );
 };
 
-const update = (address) => {
+const update = () => {
     router.patch(
-        route('admin.addresses.user.update', {address}),
+        route('admin.addresses.user.update', editItem.value),
         editItem.value,
         {
             preserveScroll: true,
@@ -62,9 +62,9 @@ const handleEdit = (address) => {
     showEditModal.value = true;
 };
 
-const doDelete = (address) => {
+const doDelete = () => {
     router.delete(
-        route('admin.addresses.user.destroy', {address}),
+        route('admin.addresses.user.destroy', deleteItem.value),
         {
             preserveScroll: true,
             preserveState: true,
@@ -126,7 +126,7 @@ const doCreateNew = () => {
            v-model="showEditModal"
            icon="pi pi-save"
            label="Update Address"
-           @accepted="update(editItem)"
+           @accepted="update"
            :loading="loading"
     >
         <AddressForm v-model="editItem"/>
@@ -136,7 +136,7 @@ const doCreateNew = () => {
            v-model="showDeleteModal"
            icon="pi pi-trash"
            label="Delete Address"
-           @accepted="doDelete(deleteItem)"
+           @accepted="doDelete"
            :loading="loading"
     >
         Are you sure you want to delete this address?
