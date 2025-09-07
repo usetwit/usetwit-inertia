@@ -43,7 +43,7 @@ class AddressPolicy
     /**
      * Determine whether the user can update a User address.
      */
-    public function updateCustomerAddress(User|Customer $user, Address $address): bool
+    public function updateCustomerAddress(Customer $user, Address $address): bool
     {
         if ($user->can('addresses.customer.update')) {
             return true;

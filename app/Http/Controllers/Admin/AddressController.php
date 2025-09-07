@@ -7,11 +7,11 @@ use App\Http\Requests\Admin\Addresses\CreateUserRequest;
 use App\Http\Requests\Admin\Addresses\UpdateUserRequest;
 use App\Models\Address;
 use App\Models\User;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 
 class AddressController extends Controller
 {
-    public function userCreate(User $user, CreateUserRequest $request): JsonResponse
+    public function userCreate(User $user, CreateUserRequest $request): RedirectResponse
     {
         $data = $request->validated();
 
@@ -23,20 +23,17 @@ class AddressController extends Controller
 
         $user->load('addresses');
 
-        return response()->json([
-            'addresses' => $user->addresses,
-            'message' => 'Address added',
-        ], 201);
+        return redirect()->back()->with(['success' => 'Address Created Successfully']);
     }
 
-    public function makeDefault(Address $address)
+    public function makeDefault(Address $address): RedirectResponse
     {
         $address->update(['is_default' => true]);
 
-        return back(303)->with('success', 'Address set as default');
+        return redirect()->back()->with('success', 'Address Set As Default');
     }
 
-    public function userDestroy(Address $address)
+    public function userDestroy(Address $address): RedirectResponse
     {
         $address->delete();
 
@@ -48,13 +45,13 @@ class AddressController extends Controller
                 ?->update(['is_default' => true]);
         }
 
-        return back(303)->with('success', 'Address deleted');
+        return redirect()->back()->with('success', 'Address Deleted Successfully');
     }
 
-    public function userUpdate(Address $address, UpdateUserRequest $request)
+    public function userUpdate(Address $address, UpdateUserRequest $request): RedirectResponse
     {
         $address->update($request->validated());
 
-        return back(303)->with('success', 'Address updated');
+        return redirect()->back()->with('success', 'Address Updated Successfully');
     }
 }
