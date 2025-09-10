@@ -12,7 +12,7 @@
         "php": "^8.4",
         "ext-fileinfo": "*",
         "ext-pdo": "*",
-        "bjeavons/zxcvbn-php": "^1.4.2",
+        "bjeavons/zxcvbn-php": "^1.4",
         "diglactic/laravel-breadcrumbs": "^10.0",
         "inertiajs/inertia-laravel": "^2.0",
         "intervention/image-laravel": "^1.5.5",

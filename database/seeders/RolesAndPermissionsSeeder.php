@@ -25,7 +25,9 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'users.update.company-profile']);
         Permission::create(['name' => 'users.update.image']);
         Permission::create(['name' => 'users.update.protected-info']);
+        Permission::create(['name' => 'users.update.role']);
         Permission::create(['name' => 'users.update.password']);
+        Permission::create(['name' => 'users.override.password']);
         Permission::create(['name' => 'addresses.user.create']);
         Permission::create(['name' => 'addresses.user.create.self']);
         Permission::create(['name' => 'addresses.user.update']);

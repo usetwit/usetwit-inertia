@@ -8,6 +8,7 @@ use App\Http\Requests\Admin\Users\UpdateEmployeeIdRequest;
 use App\Http\Requests\Admin\Users\UpdatePasswordRequest;
 use App\Http\Requests\Admin\Users\UpdatePersonalProfileRequest;
 use App\Http\Requests\Admin\Users\UpdateProtectedInfoRequest;
+use App\Http\Requests\Admin\Users\UpdateRoleRequest;
 use App\Http\Requests\Admin\Users\UpdateUsernameRequest;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
@@ -19,7 +20,7 @@ class UserUpdateController extends Controller
     {
         $user->update(['password' => Hash::make($request->input('new_password'))]);
 
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Password updated successfully');
     }
 
     public function updatePersonalProfile(UpdatePersonalProfileRequest $request, User $user): RedirectResponse
@@ -34,7 +35,7 @@ class UserUpdateController extends Controller
             'personal_email',
         ]));
 
-        return redirect()->back()->with(['success' => 'Personal Profile Updated Successfully']);
+        return redirect()->back()->with('success', 'Personal Profile Updated Successfully');
     }
 
     public function updateCompanyProfile(UpdateCompanyProfileRequest $request, User $user): RedirectResponse
@@ -46,34 +47,37 @@ class UserUpdateController extends Controller
             'company_mobile_number',
         ]));
 
-        return redirect()->back()->with(['success' => 'Company Profile Updated Successfully']);
+        return redirect()->back()->with('success', 'Company Profile Updated Successfully');
     }
 
     public function updateProtectedInfo(UpdateProtectedInfoRequest $request, User $user): RedirectResponse
     {
         $user->update($request->only([
-            'username',
             'joined_at',
             'left_at',
-            'employee_id',
         ]));
 
-        $user->syncRoles($request->input('role_id'));
+        return redirect()->back()->with('success', 'Protected Info Updated Successfully');
+    }
 
-        return redirect()->back();
+    public function updateRole(UpdateRoleRequest $request, User $user): RedirectResponse
+    {
+        $user->syncRoles($request->integer('role_id'));
+
+        return redirect()->back()->with('success', 'Role Updated Successfully');
     }
 
     public function updateUsername(UpdateUsernameRequest $request, User $user): RedirectResponse
     {
-        $user->update(['username' => $request->input('username')]);
+        $user->update($request->validated());
 
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Username Updated Successfully');
     }
 
     public function updateEmployeeId(UpdateEmployeeIdRequest $request, User $user): RedirectResponse
     {
-        $user->update(['employee_id' => $request->input('employee_id')]);
+        $user->update($request->validated());
 
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Employee ID Updated Successfully');
     }
 }

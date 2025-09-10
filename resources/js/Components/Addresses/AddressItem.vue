@@ -18,13 +18,12 @@ const permissions = computed(() => page.props.permissions);
     <div class="rounded-2xl border bg-white p-4 shadow-sm"
     >
         <div class="mb-3 flex items-start justify-between">
-            <h3 class="text-sm font-semibold">Address</h3>
-            <span
-                v-if="address.is_default"
-                class="rounded-full bg-teal-100 px-2 py-0.5 text-xs font-medium text-teal-800"
+            <h4 class="text-sm font-semibold">Address</h4>
+            <span v-if="address.is_default"
+                  class="rounded-full bg-teal-100 px-2 py-0.5 text-xs font-medium text-teal-800"
             >
                     Default
-                </span>
+            </span>
         </div>
 
         <div class="space-y-0.5 text-sm">
@@ -37,25 +36,22 @@ const permissions = computed(() => page.props.permissions);
 
         <div class="mt-4 grid grid-cols-3 gap-2">
             <Button variant="warning"
-                    size="sm"
-                    class="text-xs"
-                    @click="$emit('edit')"
+                    size="xs"
+                    @click="$emit('edit', address)"
                     :loading="loading"
                     v-if="permissions.includes('addresses.user.update') || permissions.includes('addresses.user.update.self')"
             >
                 Edit
             </Button>
             <Button variant="danger"
-                    size="sm"
-                    class="text-xs"
+                    size="xs"
                     @click="$emit('delete', address)"
                     :loading="loading"
                     v-if="permissions.includes('addresses.user.delete') || permissions.includes('addresses.user.delete.self')"
             >
                 Delete
             </Button>
-            <Button size="sm"
-                    class="text-xs"
+            <Button size="xs"
                     @click="$emit('make-default', address)"
                     :loading="loading"
                     v-if="!address.is_default && (permissions.includes('addresses.user.update') || permissions.includes('addresses.user.update.self'))"

@@ -17,7 +17,7 @@ class PasswordStrength implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $zxcvbn = new Zxcvbn();
+        $zxcvbn = new Zxcvbn;
         $settings = app(GeneralSettings::class);
 
         if ($zxcvbn->passwordStrength(substr($value, 0, 150))['score'] < $settings->password_strength) {

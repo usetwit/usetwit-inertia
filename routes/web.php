@@ -78,6 +78,7 @@ Route::prefix('admin')
                 ->group(function () {
                     Route::get('', 'index')
                         ->name('index')
+                        ->withTrashed()
                         ->can('view', User::class);
 
                     Route::get('create', 'create')
@@ -89,6 +90,7 @@ Route::prefix('admin')
                         ->can('view', User::class);
 
                     Route::get('{user}/edit', 'edit')
+                        ->withTrashed()
                         ->name('edit')
                         ->can('update', 'user');
 
@@ -99,6 +101,15 @@ Route::prefix('admin')
                     Route::post('employee-id-exists', 'employeeIdExists')
                         ->name('employee-id-exists')
                         ->can('view', User::class);
+
+                    Route::post('restore/{user}', 'restore')
+                        ->name('restore')
+                        ->withTrashed()
+                        ->can('restore', 'user');
+
+                    Route::delete('{user}', 'destroy')
+                        ->name('destroy')
+                        ->can('delete', 'user');
 
                     Route::prefix('update')->name('update.')->controller('UserUpdateController')->group(function () {
 
@@ -111,6 +122,31 @@ Route::prefix('admin')
                             ->name('company-profile')
                             ->withTrashed()
                             ->can('updateCompanyProfile', 'user');
+
+                        Route::patch('password/{user}', 'updatePassword')
+                            ->name('password')
+                            ->withTrashed()
+                            ->can('updatePassword', 'user');
+
+                        Route::patch('username/{user}', 'updateUsername')
+                            ->name('username')
+                            ->withTrashed()
+                            ->can('updateProtectedInfo', 'user');
+
+                        Route::patch('employee-id/{user}', 'updateEmployeeId')
+                            ->name('employee-id')
+                            ->withTrashed()
+                            ->can('updateProtectedInfo', 'user');
+
+                        Route::patch('protected-info/{user}', 'updateProtectedInfo')
+                            ->name('protected-info')
+                            ->withTrashed()
+                            ->can('updateProtectedInfo', 'user');
+
+                        Route::patch('role/{user}', 'updateRole')
+                            ->name('role')
+                            ->withTrashed()
+                            ->can('updateRole', 'user');
                     });
 
                 });

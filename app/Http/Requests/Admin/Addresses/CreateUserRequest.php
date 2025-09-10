@@ -34,6 +34,7 @@ class CreateUserRequest extends FormRequest
                 'nullable',
                 Rule::in(Countries::getCountryCodes()),
             ],
+            'is_default' => 'boolean',
         ];
     }
 }

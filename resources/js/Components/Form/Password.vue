@@ -26,9 +26,11 @@ onMounted(() => {
 
 const type = ref('password');
 const strength = computed(() => zxcvbn(model.value || '').score);
-const width = computed(() => model.value === '' || model.value === null ?
-    '0px' :
-    ((strength.value + 1) / 5 * 100) + '%');
+const width = computed(() => {
+    return model.value === '' || model.value === null
+        ? '0px'
+        : ((strength.value + 1) / 5 * 100) + '%';
+});
 const texts = ['Very weak', 'Weak', 'Fair', 'Good', 'Strong'];
 const strengthText = computed(() => !model.value ? 'Enter a password' : texts[strength.value]);
 </script>

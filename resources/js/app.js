@@ -7,6 +7,7 @@ import {createPinia} from 'pinia';
 import Vue3Toastify, {toast} from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 import {ZiggyVue} from 'ziggy-js';
+import tooltip from '@/directives/tooltip.js';
 
 createInertiaApp({
     progress: {
@@ -41,6 +42,7 @@ createInertiaApp({
                     width: 'auto',
                 },
             })
+            .directive('tooltip', tooltip)
             .mount(el);
     },
 });

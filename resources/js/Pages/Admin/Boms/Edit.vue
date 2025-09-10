@@ -19,14 +19,17 @@ const bom = ref(cloneDeep(props.bom));
 
 const nameExists = async () => {
     if (bom.value.name) {
-        const {data, getResponse} = useAxios(
+        const {data, status, getResponse} = useAxios(
             route('admin.boms.name-exists'),
             {name: bom.value.name},
             'post',
         );
 
         await getResponse();
-        exists.value = data.value.exists;
+
+        if (status.value === 200) {
+            exists.value = data.value.exists;
+        }
     }
 };
 </script>

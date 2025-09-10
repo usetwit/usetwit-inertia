@@ -21,8 +21,6 @@ class AddressController extends Controller
 
         $user->addresses()->create($data);
 
-        $user->load('addresses');
-
         return redirect()->back()->with(['success' => 'Address Created Successfully']);
     }
 

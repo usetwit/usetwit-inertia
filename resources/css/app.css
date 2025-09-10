@@ -100,6 +100,10 @@ body {
     @apply bg-slate-800;
 }
 
+.content h3 {
+    @apply mt-4 text-slate-800 p-4 border-y border-gray-200 bg-slate-100 font-bold uppercase tracking-tight;
+}
+
 button:not(:disabled),
 label,
 input[type="checkbox"]:not(:disabled),
@@ -126,7 +130,7 @@ input[type="radio"]:disabled {
 }
 
 div.top-links {
-    @apply flex justify-end mb-4;
+    @apply flex justify-end p-4;
 }
 
 a {

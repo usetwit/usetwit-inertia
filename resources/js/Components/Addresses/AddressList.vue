@@ -6,6 +6,8 @@ import {route} from 'ziggy-js';
 import Modal from '@/Components/Modal.vue';
 import AddressItem from '@/Components/Addresses/AddressItem.vue';
 import AddressForm from '@/Components/Addresses/AddressForm.vue';
+import Wrapper from '@/Components/Form/Wrapper.vue';
+import Checkbox from '@/Components/Form/Checkbox.vue';
 
 const page = usePage();
 const permissions = computed(() => page.props.permissions);
@@ -18,6 +20,7 @@ const emptyAddress = {
     address_line_3: '',
     postcode: '',
     country_code: defaultCountry.value,
+    is_default: true,
 };
 
 const showEditModal = ref(false);
@@ -35,7 +38,7 @@ const handleMakeDefault = (address) => {
         {
             preserveScroll: true,
             onStart: () => (loading.value = true),
-            onSuccess: () => router.reload({only: ['user']}),
+            onSuccess: () => router.reload({only: ['user', 'flash']}),
             onFinish: () => (loading.value = false),
         },
     );
@@ -111,14 +114,14 @@ const doCreateNew = () => {
         </Button>
     </div>
 
-    <div class="grid gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+    <div class="grid gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 p-4">
         <AddressItem v-for="a in user.addresses"
                      :key="a.id"
                      :address="a"
                      :loading="loading"
-                     @make-default="handleMakeDefault(a)"
-                     @edit="handleEdit(a)"
-                     @delete="handleDelete(a)"
+                     @make-default="handleMakeDefault"
+                     @edit="handleEdit"
+                     @delete="handleDelete"
         />
     </div>
 
@@ -150,6 +153,19 @@ const doCreateNew = () => {
            :loading="loading"
     >
         <AddressForm v-model="newItem"/>
+
+        <Wrapper>
+            <template #text>
+                <label for="is_default">
+                    Set as default address
+                </label>
+            </template>
+
+            <template #input>
+                <Checkbox v-model="newItem.is_default"
+                          id="is_default"/>
+            </template>
+        </Wrapper>
     </Modal>
 
 </template>

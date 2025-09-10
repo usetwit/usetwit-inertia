@@ -15,7 +15,7 @@ const props = defineProps({
     badge: {type: [String, Number]},
     size: {
         type: String, default: 'md', validator(value) {
-            return ['sm', 'md', 'lg'].includes(value);
+            return ['xs', 'sm', 'md', 'lg'].includes(value);
         },
     },
     type: {type: String, default: 'button'},
@@ -72,7 +72,9 @@ const setClasses = computed(() => {
 });
 
 const setSizeClasses = computed(() => {
-    if (props.size === 'sm') {
+    if (props.size === 'xs') {
+        return 'text-xs px-1.5 py-1';
+    } else if (props.size === 'sm') {
         return 'text-sm px-1.5 py-1';
     } else if (props.size === 'md') {
         return 'px-3 py-1.5';

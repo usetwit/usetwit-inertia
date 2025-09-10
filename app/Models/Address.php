@@ -32,7 +32,9 @@ class Address extends Model
 
         static::saving(function (Address $model) {
             if ($model->isDirty('country_code')) {
-                $model->country_name = Countries::getName($model->country_code, config('app.locale'));
+                $model->country_name = $model->country_code
+                    ? Countries::getName($model->country_code, config('app.locale'))
+                    : null;
             }
 
             if ($model->isDirty('is_default') && $model->is_default) {

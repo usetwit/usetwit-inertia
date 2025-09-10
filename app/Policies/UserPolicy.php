@@ -136,7 +136,7 @@ class UserPolicy
      */
     public function updatePassword(User $user, User $model): bool
     {
-        if ($user->can('users.update')) {
+        if ($this->overridePassword($user)) {
             return true;
         }
 
@@ -152,7 +152,7 @@ class UserPolicy
      */
     public function overridePassword(User $user): bool
     {
-        if ($user->can('users.update')) {
+        if ($user->can('users.override.password')) {
             return true;
         }
 
@@ -188,7 +188,15 @@ class UserPolicy
      */
     public function updateProtectedInfo(User $user): bool
     {
-        return $user->can('users.update');
+        return $user->can('users.update.protected-info');
+    }
+
+    /**
+     * Determine whether the user can update the model role.
+     */
+    public function updateRole(User $user): bool
+    {
+        return $user->can('users.update.role');
     }
 
     /**
@@ -202,7 +210,7 @@ class UserPolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user): bool
+    public function restore(User $user, User $model): bool
     {
         return $user->can('users.restore');
     }

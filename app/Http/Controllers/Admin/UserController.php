@@ -12,6 +12,7 @@ use App\Settings\GeneralSettings;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -133,9 +134,7 @@ class UserController extends Controller
         $heading = 'Edit User: '.$user->full_name;
         $breadcrumbs = Breadcrumbs::generate('admin.users.edit', $user);
 
-        $model = $user;
-
-        $model->load([
+        $user->load([
             'addresses' => function ($query) {
                 $query->select(
                     'addressable_id',
@@ -157,8 +156,12 @@ class UserController extends Controller
         ]);
 
         return Inertia::render('Admin/Users/Edit', [
-            'user' => fn () => $model,
-            'roles' => fn () => Role::get(['id', 'name']),
+            'user' => fn () => $user,
+            'roles' => fn () => Role::get(['id', 'name'])
+                ->map(fn ($role) => [
+                    'id' => $role->id,
+                    'name' => ucwords($role->name),
+                ]),
             'countries' => fn () => $settings->countries(),
             'defaultCountry' => fn () => $settings->default_country,
             'heading' => $heading,
@@ -170,22 +173,18 @@ class UserController extends Controller
     {
         $username = $request->string('username');
 
-        if (! $username) {
-            return response()->json(['exists' => false]);
-        }
+        $exists = User::withTrashed()->where('username', $username)->exists();
 
-        return response()->json(User::withTrashed()->where('username', $username)->get(['username']));
+        return response()->json(compact('exists'));
     }
 
     public function employeeIdExists(EmployeeIdExistsRequest $request): JsonResponse
     {
         $employee_id = $request->string('employee_id');
 
-        if (! $employee_id) {
-            return response()->json(['exists' => false]);
-        }
+        $exists = User::withTrashed()->where('employee_id', $employee_id)->exists();
 
-        return response()->json(User::withTrashed()->where('employee_id', $employee_id)->get(['employee_id']));
+        return response()->json(compact('exists'));
     }
 
     /**
@@ -199,8 +198,21 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user)
+    public function destroy(User $user): RedirectResponse
     {
-        //
+        $user->delete();
+
+        return redirect()
+            ->route('admin.users.edit', $user)
+            ->with('success', 'User Has Been Deleted');
+    }
+
+    public function restore(User $user): RedirectResponse
+    {
+        $user->restore();
+
+        return redirect()
+            ->route('admin.users.edit', $user)
+            ->with('success', 'User Has Been Restored');
     }
 }

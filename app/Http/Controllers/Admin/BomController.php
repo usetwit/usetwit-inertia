@@ -44,11 +44,7 @@ class BomController extends Controller
     {
         $name = $request->string('name');
 
-        if (! $name) {
-            return response()->json(['exists' => false]);
-        }
-
-        $exists = Bom::where('name', $name)->exists();
+        $exists = Bom::withTrashed()->where('name', $name)->exists();
 
         return response()->json(compact('exists'));
     }
