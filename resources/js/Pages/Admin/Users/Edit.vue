@@ -483,6 +483,7 @@ watch(() => user.value.username, (newValue) => {
                                    required
                                    placeholder="••••••••"
                                    id="current_password"
+                                   autocomplete="off"
                         />
                     </template>
                 </Wrapper>
@@ -501,6 +502,7 @@ watch(() => user.value.username, (newValue) => {
                                   name="new_password"
                                   required
                                   id="new_password"
+                                  autocomplete="new-password"
                         />
                     </template>
                 </Wrapper>
@@ -519,6 +521,7 @@ watch(() => user.value.username, (newValue) => {
                                   name="new_password_confirmation"
                                   required
                                   id="new_password_confirmation"
+                                  autocomplete="new-password"
                         />
                     </template>
                 </Wrapper>

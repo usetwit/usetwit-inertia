@@ -20,6 +20,7 @@ import Button from '@/Components/Form/Button.vue';
                     <Form method="post"
                           action="/admin/login"
                           #default="{ errors, processing }"
+                          autocomplete="off"
                     >
                         <div v-if="Object.keys(errors).length" class="mb-4 p-3 bg-red-200 text-red-600 rounded-lg">
                             <ul class="list-disc ml-5">

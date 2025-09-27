@@ -9,18 +9,13 @@ class AcyclicGraph implements ValidationRule
 {
     /**
      * Stores the cycle path if one is found.
-     *
-     * @var array
      */
     protected array $cyclePath = [];
 
     /**
      * Validate the graph for cycles.
      *
-     * @param string  $attribute
-     * @param mixed   $value Expected to be an array of operations.
-     * @param Closure $fail
-     * @return void
+     * @param  mixed  $value  Expected to be an array of operations.
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
@@ -38,7 +33,6 @@ class AcyclicGraph implements ValidationRule
     /**
      * Iterate over each node to check for cycles.
      *
-     * @param array $graph
      * @return bool True if acyclic, false if a cycle is detected.
      */
     protected function validateGraphCycle(array $graph): bool
@@ -59,13 +53,6 @@ class AcyclicGraph implements ValidationRule
 
     /**
      * Recursive DFS function to detect cycles.
-     *
-     * @param integer $node
-     * @param array   $graph
-     * @param array   $visited
-     * @param array   $stack
-     * @param array   $path
-     * @return bool
      */
     protected function hasCycleDFS(int $node, array $graph, array &$visited, array &$stack, array $path): bool
     {
@@ -73,6 +60,7 @@ class AcyclicGraph implements ValidationRule
             $path[] = $node;
             $cycleStart = array_search($node, $path);
             $this->cyclePath = array_slice($path, $cycleStart);
+
             return true;
         }
 
@@ -84,7 +72,7 @@ class AcyclicGraph implements ValidationRule
         $stack[$node] = true;
         $path[] = $node;
 
-        if (array_any($graph[$node], fn($nextOp) => $this->hasCycleDFS($nextOp, $graph, $visited, $stack, $path))) {
+        if (array_any($graph[$node], fn ($nextOp) => $this->hasCycleDFS($nextOp, $graph, $visited, $stack, $path))) {
             return true;
         }
 
