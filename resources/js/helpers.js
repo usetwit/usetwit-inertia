@@ -1,24 +1,30 @@
 import {DateTime} from 'luxon';
 
-export const formatDate = (input, fmt, sep = '-') => {
-    if (!input) return null;
-
-    const target = fmt.replace(/-/g, sep);
-    const attempts = [
-        () => DateTime.fromFormat(input, fmt),
-        () => DateTime.fromISO(input),
-        () => DateTime.fromSQL(input),
-        () => DateTime.fromFormat(input, 'yyyy-MM-dd HH:mm:ss'),
-    ];
-
-    for (const parse of attempts) {
-        const dt = parse();
-        if (dt.isValid) return dt.toFormat(target);
+export const formatDate = (dateString, format, separator) => {
+    if (!dateString) {
+        return null;
     }
 
-    return null;
-};
+    let date = DateTime.fromFormat(dateString, format);
 
+    if (date.isValid) {
+        return date.toFormat(format.replace(/-/g, separator));
+    }
+
+    date = DateTime.fromISO(dateString);
+
+    if (date.isValid) {
+        return date.toFormat(format.replace(/-/g, separator));
+    }
+
+    date = DateTime.fromFormat(dateString, 'yyyy-MM-dd HH:mm:ss');
+
+    if (date.isValid) {
+        return date.toFormat(format.replace(/-/g, separator));
+    }
+
+    return 'Invalid DateTime';
+};
 
 export const applyFilterRegex = (string, global, self = []) => {
     if (Array.isArray(string) || typeof string === 'object' || typeof string === 'boolean') {

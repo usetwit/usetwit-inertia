@@ -9,7 +9,7 @@ class ArrayUniqueValues implements ValidationRule
 {
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if (!is_array($value)) {
+        if (! is_array($value)) {
             return;
         }
 

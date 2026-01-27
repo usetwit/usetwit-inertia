@@ -25,7 +25,7 @@ class BomComparisonService
             ->with('successors')
             ->get()
             ->sortKeys()
-            ->mapWithKeys(fn($operation) => [
+            ->mapWithKeys(fn ($operation) => [
                 $operation->id => $operation->successors->pluck('id')->sort()->values(),
             ]);
     }
@@ -37,7 +37,7 @@ class BomComparisonService
     {
         return collect($operations)
             ->sortKeys()
-            ->mapWithKeys(fn($op) => [
+            ->mapWithKeys(fn ($op) => [
                 $op['id'] => collect($op['successors'] ?? [])->sort()->values(),
             ]);
     }
